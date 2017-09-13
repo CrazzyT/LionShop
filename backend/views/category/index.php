@@ -45,7 +45,7 @@ use yii\helpers\Url;
                         </td>
                         <td class="align-right">
 
-                            <a href="#">修改</a> |
+                            <a href="<?= Url::to(['category/update','id'=>$v['cat_id']])?>">修改</a> |
 
                             <a href="<?= Url::to(['category/delete','id'=>$v['cat_id']])?>">删除</a>
                         </td>

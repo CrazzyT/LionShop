@@ -41,13 +41,13 @@ class IndexController extends Controller
         return $this->render('index');
     }
 
-    protected function success($msg='',$url='',$wait=3)
+    protected function success($msg='',$url='',$wait=1)
     {
         $url = !empty($url) ? yii\helpers\Url::toRoute($url) : '';
         Yii::$app->session->setFlash('alerts',['msg'=>$msg,'url'=>$url,'state'=>1,'wait'=>$wait]);
     }
 
-    protected function error($msg,$url='',$wait=3)
+    protected function error($msg,$url='',$wait=1)
     {
         $url = !empty($url) ? yii\helpers\Url::toRoute($url) : '';
         Yii::$app->session->setFlash('alerts',['msg'=>$msg,'url'=>$url,'state'=>0,'wait'=>$wait]);

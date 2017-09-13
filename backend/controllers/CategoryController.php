@@ -30,18 +30,30 @@ class CategoryController extends IndexController
         return $this->render('create',['category'=>$category,'dropDownList'=>$dropDownList]);
     }
 
+    /**
+     * 分类删除
+     */
     public function actionDelete()
     {
-        $id = Yii::$app->request->get('id',0);
-        $category = Category::findOne($id);
-        if($category->delete())
+        $id = Yii::$app->request->get('id');
+
+        $childCount = Category::find()->where('parent_id=:id',['id'=>$id])->count();
+        if (!empty($childCount))
         {
-            $this->redirect(['category/index']);
+            $this->error('该分类下有子类，不可删除！');
         }
         else
         {
-            die('del Fail');
+            if(Category::findOne($id)->delete())
+            {
+                $this->success('删除成功！',['category/index']);
+            }
+            else
+            {
+                $this->error('删除失败！');
+            }
         }
+        $this->redirect(['category/index']);
     }
 
     public function actionIndex()
@@ -50,9 +62,37 @@ class CategoryController extends IndexController
         return $this->render('index',['categories'=>$categories]);
     }
 
-    public function actionUpdate()
+    /**
+     * 分类修改
+     */
+    public function actionUpdate($id)
     {
-        return $this->render('update');
+        $category = Category::findOne($id);
+
+        if(Yii::$app->request->isPost)
+        {
+            if($category->load(Yii::$app->request->post()) && $category->validate())
+            {
+                if($res = $category->save())
+                {
+                    $this->success('修改成功.','category/index');
+                }
+                else
+                {
+                    $this->error('修改失败.');
+                }
+            }
+            else
+            {
+                $this->error('数据不合法');
+            }
+        }
+
+        // 下拉菜单
+        $categories = Category::level(Category::find()->asArray()->all(),$id);
+        $dropDownList = $category->dropDownList($categories);
+
+        return $this->render('update',['category'=>$category,'dropDownList'=>$dropDownList]);
     }
 
 }

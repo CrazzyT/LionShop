@@ -33,6 +33,7 @@ class Category extends \yii\db\ActiveRecord
         return [
             [['sort', 'is_show', 'parent_id'], 'integer'],
             [['cat_name'], 'string', 'max' => 45],
+            [['cat_name'], 'unique'],
             ['parent_id','default','value'=>0]
         ];
     }
@@ -86,18 +87,18 @@ class Category extends \yii\db\ActiveRecord
     /**
      * 处理无限极分类
      */
-    static public function level($categories=[],$parentId=0,$level=0)
+    static public function level($categories=[],$except='',$parentId=0,$level=0)
     {
         static $res = [];
         if(is_array($categories))
         {
             foreach ($categories as $k => $v)
             {
-                if($v['parent_id'] == $parentId)
+                if($v['parent_id'] == $parentId && $v['cat_id'] != $except)
                 {
                     $v['level'] = $level;
                     $res[] = $v;
-                    self::level($categories,$v['cat_id'],$level+1);
+                    self::level($categories,$except,$v['cat_id'],$level+1);
                 }
             }
         }
