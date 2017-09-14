@@ -10,12 +10,17 @@ namespace common\models;
 
 
 use yii\base\Model;
+use yii\base\Exception;
+use yii\base\ErrorException;
 
 class UploadForm extends Model
 {
-    public $imageFile;
-    private $rootPath = 'uploads';
-    private $fileInfo = array();
+    protected $rootPath = './uploads/';    //上传的根目录
+    protected $filePath;                   //上传后的目录
+    public $file;                       //上传后的文件位置
+    public $imageFile;                     //文件对象
+
+
     public function rules()
     {
         return [
@@ -23,14 +28,29 @@ class UploadForm extends Model
         ];
     }
 
+    /**
+     * 文件上传
+     */
     public function upload()
     {
-        if ($this->validate()) {
-            $uploads = $this->createPath();
-            $baseName = $this->createFileName();
+        //上传文件则处理
+        if (is_null($this->imageFile))
+        {
+            return null;
+        }
+        if ($this->validate())
+        {
+            //新建目录
+            $this->createPath();
+
+            //新建文件名
+            $fileName = uniqid().rand(10000,99999);
+
             //移动临时文件
-            $this->imageFile->saveAs($uploads.'/'. $baseName . '.' . $this->imageFile->extension);
-            return true;
+            $file = $this->filePath.$fileName.'.'.$this->imageFile->extension;
+
+            $this->file = $file;
+            return $this->imageFile->saveAs($file);
         }
         else
         {
@@ -38,26 +58,25 @@ class UploadForm extends Model
         }
     }
 
-    //重命名文件名
-    private function createFileName()
-    {
-        $str = '132456444489fdjvhkdhfkdhs';
-        $randLetter = substr(str_shuffle($str), -5);
-        return time().rand(10000,99999).$randLetter;
-    }
-
     //创建目录
     private function createPath()
     {
-        $imageFile = $this->rootPath.'/'.date('Y').'/'.date('m').'/'.date('d');
-        if(!file_exists($imageFile))
-        {
-            if(!mkdir($imageFile,0777,true))
+        $path = $this->rootPath.date('Y').'/'.date('m').'/'.date('d').'/';
+        try{
+            if(!file_exists($path))
             {
-                $this->error = '创建目录失败';
-                return false;
+                if(!mkdir($path,0777,true))
+                {
+                    throw new ErrorException('创建目录失败');
+                }
             }
+            $this->filePath = $path;
+            return true;
         }
-        return $imageFile;
+        catch (Exception $e)
+        {
+            exit($e->getMessage());
+        }
+
     }
 }

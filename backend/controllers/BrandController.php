@@ -61,6 +61,7 @@ class BrandController extends IndexController
      */
     public function actionCreate()
     {
+        //默认值
         $brand = (new Brand())->loadDefaultValues();
 
         if(Yii::$app->request->isPost)
@@ -79,8 +80,6 @@ class BrandController extends IndexController
                 }
             }
         }
-//        $brand->is_show = 1;
-//        $brand->loadDefaultValues();
         return $this->render('add',['brand'=>$brand]);
     }
 
@@ -129,6 +128,5 @@ class BrandController extends IndexController
         }
         return $this->render('update',['brand'=>$brand]);
     }
-
 
 }

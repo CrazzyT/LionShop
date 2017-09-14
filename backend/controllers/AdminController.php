@@ -17,18 +17,26 @@ class AdminController extends IndexController
     public function actionInfo()
     {
         $model = new UploadForm();
+        $admin = Yii::$app->user->getIdentity();
+        $admin->scenario = 'update';
 
         if (Yii::$app->request->isPost)
         {
+
             $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
-//            if ($model->upload()) {
-//                // 文件上传成功
-//                return;
-//            }
-            $res = $model->upload();
-            var_dump($res);
+            if ($model->upload())
+            {
+                @unlink($admin->avatar);
+                $admin->avatar = $model->file;
+            }
+
+            if (!$admin->updateAdminInfo())
+            {
+                echo '修改失败';
+            }
+
         }
 
-        return $this->render('info',['model'=>$model]);
+        return $this->render('info',['model'=>$model,'admin'=>$admin]);
     }
 }

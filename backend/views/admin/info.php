@@ -20,8 +20,13 @@ use yii\helpers\Html;
             <!-- avatar column -->
             <div class="span3 avatar-box">
                 <div class="personal-image">
-                    <img src="/static/img/personal-info.png" class="avatar img-circle" />
                     <p>上传您的头像...</p>
+                    <?php if (isset($admin->avatar) && !empty($admin->avatar)): ?>
+                        <img src="<?= $admin->avatar;?>" class="avatar img-circle" />
+                    <?php else: ?>
+                        <img src="/static/img/personal-info.png" class="avatar img-circle" />
+                    <?php endif;?>
+
                     <?= $form->field($model, 'imageFile')->fileInput()->label('') ?>
                 </div>
             </div>
@@ -33,29 +38,25 @@ use yii\helpers\Html;
                 </div>
                 <h5 class="personal-title">个人信息</h5>
 
-                <form />
                 <div class="field-box">
-                    <label>用户名:</label>
-                    <input class="span5 inline-input" type="text" value="alegalvan" />
+                    <?= $form->field($admin,'username')->input('text',['class'=>'span5 inline-input'])->label('用户名')?>
                 </div>
                 <div class="field-box">
-                    <label>电子邮箱:</label>
-                    <input class="span5 inline-input" type="text" value="alejandra@design.com" />
+                    <?= $form->field($admin,'email')->input('text',['class'=>'span5 inline-input'])->label('电子邮箱')?>
                 </div>
                 <div class="field-box">
-                    <label>密码:</label>
-                    <input class="span5 inline-input" type="password" value="blablablabla" />
+                    <?= $form->field($admin,'password_hash')->passwordInput(['class'=>'span5 inline-input','value'=>''])->label('密码')?>
                 </div>
+                <!--
                 <div class="field-box">
-                    <label>确认密码:</label>
-                    <input class="span5 inline-input" type="password" value="blablablabla" />
+                    <?= $form->field($admin,'repassword')->passwordInput(['class'=>'span5 inline-input','value'=>''])->label('确认密码')?>
                 </div>
+                -->
                 <div class="span6 field-box actions">
                     <?= Html::submitButton('保存修改',['class'=>'btn-glow primary'])?>
                     <span>OR</span>
                     <?= Html::resetInput('取消',['class'=>'reset'])?>
                 </div>
-                </form>
             </div>
         </div>
     </div>
