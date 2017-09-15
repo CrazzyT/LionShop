@@ -8,6 +8,7 @@
 
 $alerts = yii::$app->session->getFlash('alerts');
 $url = isset($alerts['url']) ? $alerts['url'] : null;
+$skip = $alerts['skip'];
 ?>
 
 <?php if(isset($alerts) && ($alerts['state'] == 0)){ ?>
@@ -26,7 +27,7 @@ $url = isset($alerts['url']) ? $alerts['url'] : null;
 
 <?php } ?>
 
-<?php if(isset($url)){?>
+<?php if(isset($url) && $skip){?>
 <script>
     setInterval(function(){
 

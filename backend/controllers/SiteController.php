@@ -2,6 +2,7 @@
 namespace backend\controllers;
 
 use backend\models\Admin;
+use common\helpers\Tools;
 use Yii;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
@@ -63,7 +64,6 @@ class SiteController extends Controller
     public function actionIndex()
     {
         $this->redirect(['index/index']);
-//        return $this->render('index');
     }
 
     /**
@@ -80,7 +80,8 @@ class SiteController extends Controller
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
+//            return $this->goBack();
+            $this->redirect(['index/index']);
         } else {
             return $this->render('login', [
                 'model' => $model,
@@ -107,7 +108,7 @@ class SiteController extends Controller
     {
         $this->layout = 'signin';
 
-        $admin = new Admin(['scenario'=>'resetpwd']);
+        $admin = new Admin(['scenario'=>'sendmail']);
         if (Yii::$app->request->isPost)
         {
             $post = Yii::$app->request->post();
@@ -115,16 +116,19 @@ class SiteController extends Controller
             {
                 //验证库中是否存在此email
                 $adminOne = Admin::findOne(['email'=>$admin->email]);
+
                 if ($adminOne)
                 {
                     $timestamp = time();
                     $token = $this->createToken($timestamp,$admin->email);
+
                     //发送email
                     Yii::$app->mailer->compose('passwordreset',['timestamp'=>$timestamp,'email'=>$admin->email,'token'=>$token,'adminname'=>$admin->username])
                         ->setFrom('1278729699@qq.com')
                         ->setTo($admin->email)
                         ->setSubject('haha')
                         ->send();
+                    Tools::success('发送Email成功！','',false);
                 }
                 else
                 {
@@ -136,9 +140,55 @@ class SiteController extends Controller
         return $this->render('reset-pwd',['admin'=>$admin]);
     }
 
+    /**
+     * 邮箱重置密码
+     */
     public function actionResetPwd()
     {
-        echo '----';
+        $this->layout = 'signin';
+
+        $timestamp = Yii::$app->request->get('timestamp');
+        $email = Yii::$app->request->get('email');
+        $token = Yii::$app->request->get('token');
+
+        if((time() - $timestamp) > 1800)
+        {
+
+            Tools::error('连接超时！','',false);
+            $this->redirect(['site/send-mail']);
+        }
+
+        $myToken = $this->createToken($timestamp,$email,$token);
+        if ($myToken != $token)
+        {
+            Tools::error('无效地址！','',false);
+            $this->redirect(['site/send-mail']);
+        }
+
+        $admin = Admin::findOne(['email'=>$email]);
+        $admin->scenario = 'resetpwd';
+
+        if (Yii::$app->request->isPost)
+        {
+            $post = Yii::$app->request->post();
+            if ($admin->load($post) && $admin->validate())
+            {
+                //重置密码
+                $admin->setPassword($admin->password);
+                if ($admin->save())
+                {
+                    Tools::success('修改成功！');
+                    $this->redirect(['site/login']);
+
+                }
+                else
+                {
+                    Tools::error('修改失败！','',false);
+                }
+            }
+        }
+
+        return $this->render('get-reset-pwd',['admin'=>$admin]);
     }
 
     protected function createToken($time,$email)
