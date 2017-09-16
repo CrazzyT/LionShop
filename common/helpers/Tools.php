@@ -1,8 +1,8 @@
 <?php
 namespace common\helpers;
 
-use Yii;
-use Yii\helpers\Url;
+use yii;
+use yii\helpers\Url;
 
 class Tools
 {
