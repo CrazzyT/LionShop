@@ -71,8 +71,13 @@ class Category extends \yii\db\ActiveRecord
     /**
      * 添加下拉框遍历数据
      */
-    public function dropDownList($categories = [])
+    public function dropDownList($categories=[])
     {
+        if(empty($categories))
+        {
+            $categories = self::level(self::find()->asArray()->all());
+        }
+
         $res = [];
         if(is_array($categories))
         {
@@ -104,4 +109,5 @@ class Category extends \yii\db\ActiveRecord
         }
         return $res;
     }
+
 }

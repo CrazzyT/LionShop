@@ -192,7 +192,7 @@ use yii\helpers\Html;
                 <li><a href="<?= Url::to(['brand/list']);?>">品牌列表</a></li>
                 <li><a href="<?= Url::to(['category/index']);?>">分类管理</a></li>
                 <li><a href="<?= Url::to(['goods-type/index']);?>">商品类型</a></li>
-                <li><a href="<?= Url::to(['goods/list']);?>">商品管理</a></li>
+                <li><a href="<?= Url::to(['goods/index']);?>">商品管理</a></li>
             </ul>
         </li>
         <li>
@@ -215,7 +215,7 @@ use yii\helpers\Html;
         </li>
 
         <li>
-            <a href="gallery.html">
+            <a href="#">
                 <i class="icon-picture"></i>
                 <span>相册管理</span>
             </a>

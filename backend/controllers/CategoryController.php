@@ -1,7 +1,9 @@
 <?php
 
 namespace backend\controllers;
+use common\helpers\Tools;
 use common\models\Category;
+use common\models\Goods;
 use Yii;
 
 class CategoryController extends IndexController
@@ -15,17 +17,16 @@ class CategoryController extends IndexController
            {
                 if ($category->save())
                 {
-                    $this->success('分类添加成功','category/index');
+                    Tools::success('分类添加成功','category/index');
                 }
                 else
                 {
-                    $this->error('分类添加失败');
+                    Tools::error('分类添加失败');
                 }
            }
         }
         //下拉数据
-        $categories = Category::level(Category::find()->asArray()->all());
-        $dropDownList = $category->dropDownList($categories);
+        $dropDownList = $category->dropDownList();
 
         return $this->render('create',['category'=>$category,'dropDownList'=>$dropDownList]);
     }
@@ -40,18 +41,27 @@ class CategoryController extends IndexController
         $childCount = Category::find()->where('parent_id=:id',['id'=>$id])->count();
         if (!empty($childCount))
         {
-            $this->error('该分类下有子类，不可删除！');
+            Tools::error('该分类下有子类，不可删除！');
         }
         else
         {
-            if(Category::findOne($id)->delete())
+            $count = Goods::find()->where('cat_id=:cid',[':cid'=>$id])->count();
+            if ($count > 0)
             {
-                $this->success('删除成功！',['category/index']);
+                Tools::error('该分类下有商品，不可删除！');
             }
             else
             {
-                $this->error('删除失败！');
+                if(Category::findOne($id)->delete())
+                {
+                    Tools::success('删除成功！',['category/index']);
+                }
+                else
+                {
+                    Tools::error('删除失败！');
+                }
             }
+
         }
         $this->redirect(['category/index']);
     }
@@ -75,19 +85,18 @@ class CategoryController extends IndexController
             {
                 if($res = $category->save())
                 {
-                    $this->success('修改成功.','category/index');
+                    Tools::success('修改成功.','category/index');
                 }
                 else
                 {
-                    $this->error('修改失败.');
+                    Tools::error('修改失败.');
                 }
             }
             else
             {
-                $this->error('数据不合法');
+                Tools::error('数据不合法');
             }
         }
-
         // 下拉菜单
         $categories = Category::level(Category::find()->asArray()->all(),$id);
         $dropDownList = $category->dropDownList($categories);
