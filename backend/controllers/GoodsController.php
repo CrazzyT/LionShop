@@ -20,7 +20,7 @@ class GoodsController extends \yii\web\Controller
 {
     public function beforeAction($action)
     {
-        $noCsrfActions = ['gallery','xxx'];
+        $noCsrfActions = ['gallery','edit-img'];
         if(in_array($action->id,$noCsrfActions))
         {
             $action->controller->enableCsrfValidation = false;
@@ -85,7 +85,6 @@ class GoodsController extends \yii\web\Controller
             $cids = ArrayHelper::getColumn($childs,'cat_id');
             array_push($cids,$map['cid']);
             $query->andWhere(['in','cat_id',$cids]);
-//            $query->andWhere('cat_id=:cid',[':cid'=>$map['cid']]);
         }
         // 处理品牌搜索条件
         if(!empty($map['bid']))
@@ -145,5 +144,42 @@ class GoodsController extends \yii\web\Controller
         return $this->render('gallery',['gname'=>$gname,'gid'=>$gid,'galleries'=>$galleries]);
     }
 
+    /**
+     * 删除商品相册
+     */
+    public function actionDeleteImg($key)
+    {
+        $result = ['code'=>0,'msg'=>'删除成功.','data'=>[]];
+        $error = (new UploadForm)->deleteFile($key);
+        if($error == null)
+        {
+            // 删除成功
+            $goodsGellery = GoodsGallery::find()->where(['original_img'=>$key])->one();
+            if(!is_null($goodsGellery) && !$goodsGellery->delete())
+            {
+                $result['code'] = 300;
+                $result['msg'] = '从数据库删除失败.';
+            }
+        }
+        else
+        {
+            $result['code'] = $error->code();
+            $result['msg'] = $error->message();
+        }
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        return $result;
+    }
 
+    /**
+     * 修改商品相片描述
+     *
+     * @return int
+     */
+    public function actionEditImg()
+    {
+        $img_desc = Yii::$app->request->post('img_desc');
+        $original_img = Yii::$app->request->post('original_img');
+        $result = GoodsGallery::updateAll(['img_desc'=>$img_desc],'original_img=:oimg',[':oimg'=>$original_img]);
+        return $result;
+    }
 }

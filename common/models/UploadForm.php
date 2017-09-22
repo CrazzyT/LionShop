@@ -8,12 +8,13 @@
 
 namespace common\models;
 
-
 use Qiniu\Auth;
+use Qiniu\Config;
+use Qiniu\Storage\BucketManager;
 use Qiniu\Storage\UploadManager;
-use yii\base\Model;
-use yii\base\Exception;
 use yii\base\ErrorException;
+use yii\base\Exception;
+use yii\base\Model;
 
 class UploadForm extends Model
 {
@@ -32,8 +33,22 @@ class UploadForm extends Model
     public function rules()
     {
         return [
-            [['imageFile'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg'],
+            [['imageFile'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg, gif'],
         ];
+    }
+
+    /**
+     * 删除七牛云资源
+     *
+     * @param $key
+     * @return mixed
+     */
+    public function deleteFile($key)
+    {
+        $auth = new Auth($this->qiniuConfig['accessKey'],$this->qiniuConfig['secretKey']);
+        $config = new Config();
+        $bucketMar = new BucketManager($auth,$config);
+        return $bucketMar->delete($this->qiniuConfig['bucket'],$key);
     }
 
     /**
@@ -55,11 +70,13 @@ class UploadForm extends Model
      */
     public function uploadToQiNiu()
     {
-        // code 0:上传成功；100:验证失败；200:入库失败；
+        // code 0:上传成功；100:验证失败；200:入库失败；300删除失败
         $result = ['code'=>0,'msg'=>'上传成功.','data'=>['src'=>'','url'=>'']];
         if($this->validate())
         {
-            $fileName = $this->createFileName() . '.' . $this->imageFile->extension;
+            $this->createPath();
+
+            $fileName = $this->qiniuConfig['basePath'] . $this->createFileName() . '.' . $this->imageFile->extension;
 //            $fileName = '10000';
             $auth = new Auth($this->qiniuConfig['accessKey'],$this->qiniuConfig['secretKey']);
             $token = $auth->uploadToken($this->qiniuConfig['bucket']);
@@ -123,7 +140,8 @@ class UploadForm extends Model
     //创建目录
     private function createPath()
     {
-        $path = $this->rootPath.date('Y').'/'.date('m').'/'.date('d').'/';
+        $datePath = date('Y') .'/' . date('m') .'/' . date('d') .'/';
+        $path = $this->rootPath . $datePath;
         try{
             if(!file_exists($path))
             {
