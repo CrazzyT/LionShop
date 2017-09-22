@@ -2,20 +2,19 @@
 
 namespace backend\controllers;
 
-use common\models\Goods;
-use common\models\Category;
-use common\models\Brand;
-use yii;
 use common\helpers\Tools;
-use common\models\UploadForm;
-use yii\data\Pagination;
+use common\models\Brand;
+use common\models\Category;
+use common\models\Goods;
 use common\models\GoodsGallery;
+use common\models\UploadForm;
 use Qiniu\Auth;
 use Qiniu\Storage\UploadManager;
+use Yii;
+use yii\data\Pagination;
 use yii\helpers\ArrayHelper;
 use yii\web\Response;
 use yii\web\UploadedFile;
-
 
 class GoodsController extends \yii\web\Controller
 {
@@ -55,34 +54,60 @@ class GoodsController extends \yii\web\Controller
         return $this->render('delete');
     }
 
-    public function actionIndex()
+    public function actionIndex($cid = '', $bid = '', $property = '', $sale = null, $name = null)
     {
-        $sql= Goods::find();
-        $catList = (new Category())->dropDownList();
+        $map = ['cid' => $cid, 'bid' => $bid, 'property' => $property, 'name' => $name,'sale'=>$sale]; //搜索条件
+
+        $catList = (new Category)->dropDownList();
         $brandList = (new Brand())->dropDownList();
-        $PageSize=yii::$app->params['pageSize'];
 
-        if(Yii::$app->request->isGet){
-            //            echo '1';die;
-            $post =yii::$app->request->get();
+        $query = $this->_search($map,Goods::find());
 
-            $sql=(new Goods())->readWhere($sql);
-            if (!empty($post['goodsList_id']))
-            {
-                $sql=(new Goods())->aa($sql,$post['goodsList_id']);
-            }
-        }
+        $page = new Pagination(['defaultPageSize' => yii::$app->params['pageSize'], 'totalCount' => $query->count()]);
 
-        $pagination = new Pagination([
-            'defaultPageSize' => $PageSize,
-            'totalCount' => $sql->count(),
-        ]);
-        $countries = $sql
-            ->offset($pagination->offset)
-            ->limit($pagination->limit)
+        $goodsList = $query->offset($page->offset)
+            ->limit($page->limit)
             ->all();
-        return $this->render('index',['pagination' => $pagination,'countries'=>$countries,'catList'=>$catList,'brandList'=>$brandList]);
+
+        return $this->render('index',['map'=>$map,'catList'=>$catList,'brandList'=>$brandList,'page'=>$page,'goodsList'=>$goodsList]);
     }
+
+    /**
+     * 处理搜索条件
+     */
+    private function _search($map,$query)
+    {
+        $query->where('is_delete=:isdel',[':isdel'=>0]);
+        // 处理分类搜索条件
+        if(!empty($map['cid']))
+        {
+            $childs = Category::levels(Category::find()->select('cat_id,parent_id,cat_name')->asArray()->all(),'',$map['cid']);
+            $cids = ArrayHelper::getColumn($childs,'cat_id');
+            array_push($cids,$map['cid']);
+            $query->andWhere(['in','cat_id',$cids]);
+//            $query->andWhere('cat_id=:cid',[':cid'=>$map['cid']]);
+        }
+        // 处理品牌搜索条件
+        if(!empty($map['bid']))
+        {
+            $query->andWhere('brand_id=:bid',[':bid'=>$map['bid']]);
+        }
+        // 处理其他搜索条件
+        if(!empty($map['property']))
+        {
+            $query->andWhere([$map['property']=>1]);
+        }
+        if(is_numeric($map['sale']))
+        {
+            $query->andWhere(['is_on_sale'=>$map['sale']]);
+        }
+        if(isset($map['name']) && !empty($map['name']))
+        {
+            $query->andWhere(['like','goods_name',$map['name']]);
+        }
+        return $query;
+    }
+
 
     public function actionUpdate()
     {

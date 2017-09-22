@@ -110,4 +110,22 @@ class Category extends \yii\db\ActiveRecord
         return $res;
     }
 
+    static public function levels($categories=[],$except='',$parentId=0,$level=0)
+    {
+        static $res = [];
+        if(is_array($categories))
+        {
+            foreach ($categories as $k => $v)
+            {
+                if($v['parent_id'] == $parentId && $v['cat_id'] != $except)
+                {
+                    $v['level'] = $level;
+                    $res[] = $v;
+                    self::levels($categories,$except,$v['cat_id'],$level+1);
+                }
+            }
+        }
+        return $res;
+    }
+
 }
