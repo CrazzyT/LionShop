@@ -2,10 +2,12 @@
 
 namespace backend\controllers;
 
+use backend\models\GoodsType;
 use common\helpers\Tools;
 use common\models\Brand;
 use common\models\Category;
 use common\models\Goods;
+use common\models\GoodsAttr;
 use common\models\GoodsGallery;
 use common\models\UploadForm;
 use Qiniu\Auth;
@@ -181,5 +183,30 @@ class GoodsController extends \yii\web\Controller
         $original_img = Yii::$app->request->post('original_img');
         $result = GoodsGallery::updateAll(['img_desc'=>$img_desc],'original_img=:oimg',[':oimg'=>$original_img]);
         return $result;
+    }
+
+    /**
+     * 商品属性与货品组合
+     */
+    public function actionProduct($gid,$gname='',$act='')
+    {
+        if($act == 'attr')
+        {
+            $post = Yii::$app->request->post('attr_value');
+            if((new GoodsAttr)->createAllGoodsAttr($gid,$post))
+            {
+                echo 'OK';
+            }
+        }
+        else if($act == 'product')
+        {
+        }
+        $typeList = (new GoodsType)->dropDownList();
+        $data = [
+            'gid'       =>$gid,
+            'gname'     =>$gname,
+            'typeList'  =>$typeList
+        ];
+        return $this->render('product',$data);
     }
 }

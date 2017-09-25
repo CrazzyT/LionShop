@@ -3,6 +3,7 @@
 namespace backend\controllers;
 
 use common\helpers\Tools;
+use common\models\Attribute;
 use yii;
 use backend\models\GoodsType;
 
@@ -41,6 +42,13 @@ class GoodsTypeController extends \yii\web\Controller
     public function actionUpdate()
     {
         return $this->render('update');
+    }
+
+    public function actionGetAttrByTypeId($tid)
+    {
+        $this->layout = false;
+        $attrs = (new Attribute())->getAttr($tid);
+        return $this->render('attrlist',['attrs'=>$attrs]);
     }
 
 }
