@@ -2,10 +2,11 @@
 
 namespace backend\controllers;
 
+use backend\models\GoodsType;
 use common\helpers\Tools;
 use common\models\Attribute;
+use common\models\GoodsAttr;
 use yii;
-use backend\models\GoodsType;
 
 class GoodsTypeController extends \yii\web\Controller
 {
@@ -44,11 +45,16 @@ class GoodsTypeController extends \yii\web\Controller
         return $this->render('update');
     }
 
-    public function actionGetAttrByTypeId($tid)
+    public function actionGetAttrByTypeId($tid,$gid='')
     {
         $this->layout = false;
-        $attrs = (new Attribute())->getAttr($tid);
-        return $this->render('attrlist',['attrs'=>$attrs]);
+        $attrAndSpecList = (new Attribute())->getAttr($tid);
+        $selectedAttrs = '';
+        if(!empty($gid))
+        {
+            $selectedAttrs = (new GoodsAttr())->getAttribute($gid);
+        }
+        return $this->render('attrlist',['attrs'=>$attrAndSpecList,'selectedAttrs'=>$selectedAttrs]);
     }
 
 }

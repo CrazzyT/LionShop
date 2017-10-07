@@ -15,6 +15,9 @@ use yii\base\Exception;
  */
 class GoodsAttr extends \yii\db\ActiveRecord
 {
+    const IS_ATTR = 0;  // 属性
+    const IS_SPEC = 1;  // 规格
+
     public $attrValueErr = null;
     /**
      * @inheritdoc
@@ -61,6 +64,34 @@ class GoodsAttr extends \yii\db\ActiveRecord
     public function getGoods()
     {
         return $this->hasOne(Goods::className(), ['goods_id' => 'goods_id']);
+    }
+
+    /**
+     * 根据商品 ID 查询规格
+     */
+    public function getAttribute($gid)
+    {
+        $result = ['spec'=>[],'attr'=>[],'type_id'=>''];
+        $attributes = self::find('goods_attr_id','attr_value')->where(['goods_id'=>$gid])->all();
+        if(!empty($attributes))
+        {
+            foreach ($attributes as $key=>$value)
+            {
+                $result['type_id'] = $value->attr->type_id;
+                if($value->attr->attr_type == self::IS_SPEC)
+                {
+                    $result['spec'][$value->attr->attr_name][$value['goods_attr_id']] = $value['attr_value'];
+                }
+                else
+                {
+                    $result['attr'][$key]['goods_attr_id'] = $value['goods_attr_id'];
+                    $result['attr'][$key]['attr_name'] = $value->attr->attr_name;
+                    $result['attr'][$key]['attr_value'] = $value['attr_value'];
+                }
+            }
+            return $result;
+        }
+        return null;
     }
 
     /**
