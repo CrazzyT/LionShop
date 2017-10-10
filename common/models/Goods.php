@@ -325,4 +325,19 @@ class Goods extends \yii\db\ActiveRecord
             ->all();
         return self::disposeGoodsData($query);
     }
+
+    /**
+     * 查询指定分类下商品列表
+     */
+    static function getGoodsByCatId($catId)
+    {
+        $map = Category::buildInCondition($catId);
+        $query = self::find()
+            ->select('goods_id,goods_name,market_price,shop_price,brand_id,goods_img,is_new,is_hot,is_best')
+            ->where($map)
+            ->andWhere(['is_on_sale'=>self::IS_ON_SALE,'is_delete'=>self::IS_NOT_DELETE])
+            ->all();
+
+        return self::disposeGoodsData($query);
+    }
 }

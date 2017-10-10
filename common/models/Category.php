@@ -3,7 +3,9 @@
 namespace common\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
+use common\helpers\Tools;
 
 
 /**
@@ -96,7 +98,14 @@ class Category extends \yii\db\ActiveRecord
 
     /**
      * 处理无限极分类
+     *
+     * @param array $categories
+     * @param string $except
+     * @param int $parentId
+     * @param int $level
+     * @return array
      */
+
     static public function level($categories=[],$except='',$parentId=0,$level=0)
     {
         static $res = [];
@@ -156,8 +165,67 @@ class Category extends \yii\db\ActiveRecord
         return $baseCats;
     }
 
-    static function getCategoryInfo($cid)
+    /**
+     * 根据ID查询分类信息
+     *
+     * @param $cid
+     * @return array|null|\yii\db\ActiveRecord
+     */
+    static public function getCategoryInfo($cid)
     {
+        return self::find()->select('cat_id,cat_name,parent_id')
+            ->where('cat_id=:cid',[':cid'=>$cid])
+            ->asArray()
+            ->one();
+    }
 
+    /**
+     * 获取分类下面包屑导航
+     *
+     * @param $cid
+     * @return string
+     */
+    static public function getBreadcrumb($cid)
+    {
+        $parents = self::getParentsCategory($cid);
+        $breadUrl = '<a href="'.Tools::buildUrl(['index/index']).'">首页 </a>';
+        while($catInfo = array_pop($parents))
+        {
+            $breadUrl .= '&rsaquo; <a href="'.Tools::buildUrl(['category/index','cid'=>$catInfo['cat_id']]).'">'.$catInfo['cat_name'].' </a>';
+        }
+        return $breadUrl;
+    }
+
+    /**
+     * 根据分类ID查询父级
+     *
+     * @param $cid
+     * @return array
+     */
+    static function getParentsCategory($cid)
+    {
+        static $urHere = [];
+        if($cid == self::BASE_CATE)
+        {
+            return $urHere;
+        }
+        $catInfo = self::getCategoryInfo($cid);
+        $urHere[] = $catInfo;
+        return self::getParentsCategory($catInfo['parent_id']);
+    }
+
+    /**
+     * 查询指定分类下子分类并构造成In条件
+     *
+     * @param $catId
+     * @return array
+     */
+    static function buildInCondition($catId)
+    {
+        $allCategories = self::find()->select('cat_id,parent_id,cat_name')->asArray()->all();
+        $childs = self::level($allCategories,'',$catId);
+        $cids = ArrayHelper::getColumn($childs,'cat_id');
+        array_push($cids,$catId);
+        return ['in','cat_id',$cids];
     }
 }

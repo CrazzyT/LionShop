@@ -2,8 +2,10 @@
 
 namespace frontend\controllers;
 
+use common\models\Goods;
+use Yii;
 use common\models\Category;
-use yii;
+use yii\data\Pagination;
 
 class CategoryController extends \yii\web\Controller
 {
@@ -19,11 +21,22 @@ class CategoryController extends \yii\web\Controller
         $catInfo = Category::getCategoryInfo($cid);
         if (!$catInfo)
         {
-            //Yii::$app->response->redirect(['index/index']);
+            Yii::$app->response->redirect(['index/index']);eixt;
         }
 
-        $data = [
+        // 查询面包屑
+        $this->view->params['breadcrumb'] = Category::getBreadcrumb($cid);
 
+        // 查询分类商品
+        $goods = Goods::getGoodsByCatId($cid);
+
+        // 查询指定分类下精品列表
+        //$cateRecommond = Goods::getRecommendGoods('is_best','','5',$cid);
+
+        $data = [
+//            'goodsList'     =>$goods['goodsList'],
+//            'pagination'    =>$goods['pagination'],
+//            'cateRecommond' =>$cateRecommond
         ];
 
         return $this->render('index',$data);
