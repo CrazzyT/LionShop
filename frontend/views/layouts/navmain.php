@@ -1,3 +1,6 @@
+<?php
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,10 +18,10 @@
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
 
-    <!-- Customizable CSS [green/orange/blue/navy/dark-green] -->
+    <!-- Customizable CSS -->
     <link rel="stylesheet" href="assets/css/main.css">
-    <!-- <link rel="stylesheet" href="assets/css/green.css"> -->
     <link rel="stylesheet" href="assets/css/red.css">
+    <!-- <link rel="stylesheet" href="assets/css/orange.css"> -->
     <link rel="stylesheet" href="assets/css/owl.carousel.css">
     <link rel="stylesheet" href="assets/css/owl.transitions.css">
     <link rel="stylesheet" href="assets/css/animate.min.css">
@@ -96,10 +99,10 @@
         </div><!-- /.container -->
     </nav><!-- /.top-bar -->
     <!-- ============================================================= TOP NAVIGATION : END ============================================================= -->		<!-- ============================================================= HEADER ============================================================= -->
-    <header>
+    <header class="no-padding-bottom header-alt">
         <div class="container no-padding">
 
-            <div class="col-xs-12 col-sm-12 col-md-3 logo-holder">
+            <div class="col-xs-12 col-md-3 logo-holder">
                 <!-- ============================================================= LOGO ============================================================= -->
                 <div class="logo">
                     <a href="index.html">
@@ -129,7 +132,7 @@
                 </div><!-- /.logo -->
                 <!-- ============================================================= LOGO : END ============================================================= -->		</div><!-- /.logo-holder -->
 
-            <div class="col-xs-12 col-sm-12 col-md-6 top-search-holder no-margin">
+            <div class="col-xs-12 col-md-6 top-search-holder no-margin">
                 <div class="contact-row">
                     <div class="phone inline">
                         <i class="fa fa-phone"></i> (+800) 123 456 7890
@@ -166,7 +169,7 @@
                 </div><!-- /.search-area -->
                 <!-- ============================================================= SEARCH AREA : END ============================================================= -->		</div><!-- /.top-search-holder -->
 
-            <div class="col-xs-12 col-sm-12 col-md-3 top-cart-row no-margin">
+            <div class="col-xs-12 col-md-3 top-cart-row no-margin">
                 <div class="top-cart-row-container">
 
                     <!-- ============================================================= SHOPPING CART DROPDOWN ============================================================= -->
@@ -261,6 +264,78 @@
                 <!-- ============================================================= SHOPPING CART DROPDOWN : END ============================================================= -->		</div><!-- /.top-cart-row -->
 
         </div><!-- /.container -->
+
+        <!-- ========================================= NAVIGATION ========================================= -->
+        <nav id="top-megamenu-nav" class="megamenu-vertical animate-dropdown">
+            <div class="container">
+                <div class="yamm navbar">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#mc-horizontal-menu-collapse">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                    </div><!-- /.navbar-header -->
+                    <div class="collapse navbar-collapse" id="mc-horizontal-menu-collapse">
+                        <ul class="nav navbar-nav">
+
+                            <?php if(is_array($this->params['navigation'])): foreach($this->params['navigation'] as $nav): ?>
+                            <li class="dropdown yamm-fw">
+                                <a href="#" class="dropdown-toggle" data-hover="dropdown" data-toggle="dropdown"><?= $nav['cat_name'];?></a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <div class="yamm-content">
+                                            <div class="row">
+
+                                <?php if(is_array($nav['son'])): foreach($nav['son'] as $val): ?>
+                                                <div class="col-xs-12 col-sm-3">
+                                                    <h2><?= $val['cat_name']?></h2>
+                                                    <ul>
+                                    <?php if(is_array($val['son'])): foreach($val['son'] as $v): ?>
+                                                        <li><a href="<?= $v['url']?>"><?= $v['cat_name']?></a></li>
+                                    <?php endforeach;endif;?>
+                                                    </ul>
+                                                </div><!-- /.col -->
+                                <?php endforeach;endif;?>
+                                            </div><!-- /.row -->
+                                        </div><!-- /.yamm-content -->
+                                    </li>
+                                </ul>
+                            </li><!-- /.yamm-fw -->
+                            <?php endforeach;endif;?>
+
+                            <li class="dropdown hidden-md">
+                                <a href="#" class="dropdown-toggle" data-hover="dropdown">GPS &amp; Car Audio</a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#">Laptops &amp; Notebooks</a></li>
+                                    <li><a href="#">RTV</a></li>
+                                    <li><a href="#">TV &amp; Audio</a></li>
+                                    <li><a href="#">Gadgets</a></li>
+                                    <li><a href="#">Cameras</a></li>
+                                </ul>
+                            </li>
+
+
+                        </ul><!-- /.navbar-nav -->
+                    </div><!-- /.navbar-collapse -->
+                </div><!-- /.navbar -->
+            </div><!-- /.container -->
+        </nav><!-- /.megamenu-vertical -->
+        <!-- ========================================= NAVIGATION : END ========================================= -->
+        <div class="animate-dropdown"><!-- ========================================= BREADCRUMB ========================================= -->
+            <div id="breadcrumb-alt">
+                <div class="container">
+                    <div class="breadcrumb-nav-holder minimal">
+                        <ul class="breadcrumb-item">
+                            <a href="/index.html">shop by department </a>&rsaquo;
+                            <a href="category-grid.html">Gaming</a> &rsaquo;
+                            <a href="#" class="active">VAIO Fit Laptop - Windows</a>
+                        </ul>
+                    </div>
+                </div><!-- /.container -->
+            </div>
+            <!-- ========================================= BREADCRUMB : END ========================================= --></div>
     </header>
     <!-- ============================================================= HEADER : END ============================================================= -->
 
@@ -274,7 +349,7 @@
                 <div class="col-xs-12  col-sm-4 no-margin-left">
                     <!-- ============================================================= FEATURED PRODUCTS ============================================================= -->
                     <div class="widget">
-                        <h2>精品推荐</h2>
+                        <h2>Featured products</h2>
                         <div class="body">
                             <ul>
                                 <li>
@@ -337,7 +412,7 @@
                 <div class="col-xs-12 col-sm-4 ">
                     <!-- ============================================================= ON SALE PRODUCTS ============================================================= -->
                     <div class="widget">
-                        <h2>新品推荐</h2>
+                        <h2>On-Sale Products</h2>
                         <div class="body">
                             <ul>
                                 <li>
@@ -401,7 +476,7 @@
                 <div class="col-xs-12 col-sm-4 ">
                     <!-- ============================================================= TOP RATED PRODUCTS ============================================================= -->
                     <div class="widget">
-                        <h2>热销商品</h2>
+                        <h2>Top Rated Products</h2>
                         <div class="body">
                             <ul>
                                 <li>
@@ -471,7 +546,7 @@
                 <div class="col-xs-12 col-sm-8 col-sm-offset-2 no-padding">
                     <form role="form">
                         <input placeholder="Subscribe to our newsletter">
-                        <button class="le-button">订阅</button>
+                        <button class="le-button">Subscribe</button>
                     </form>
                 </div>
             </div><!-- /.container -->
@@ -623,12 +698,7 @@
 <script src="assets/js/wow.min.js"></script>
 <script src="assets/js/scripts.js"></script>
 
-
-<script src="assets/layer/layer.js"></script>
-<script src="assets/js/common.js"></script>
-
 <!-- <script src="http://w.sharethis.com/button/buttons.js"></script> -->
 
 </body>
 </html>
-
