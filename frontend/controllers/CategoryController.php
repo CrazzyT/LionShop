@@ -31,12 +31,12 @@ class CategoryController extends \yii\web\Controller
         $goods = Goods::getGoodsByCatId($cid);
 
         // 查询指定分类下精品列表
-        //$cateRecommond = Goods::getRecommendGoods('is_best','','5',$cid);
+        $cateRecommond = Goods::getRecommendGoods('is_best','','5',$cid);
 
         $data = [
-//            'goodsList'     =>$goods['goodsList'],
-//            'pagination'    =>$goods['pagination'],
-//            'cateRecommond' =>$cateRecommond
+            'goodsList'     =>$goods['goodsList'],
+            'pagination'    =>$goods['pagination'],
+            'cateRecommond' =>$cateRecommond
         ];
 
         return $this->render('index',$data);
