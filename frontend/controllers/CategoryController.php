@@ -24,6 +24,10 @@ class CategoryController extends \yii\web\Controller
             Yii::$app->response->redirect(['index/index']);eixt;
         }
 
+        // 查询主导航
+        $navigation = Category::getNavigation();
+        $this->view->params['navigation'] = $navigation;
+
         // 查询面包屑
         $this->view->params['breadcrumb'] = Category::getBreadcrumb($cid);
 
@@ -33,10 +37,16 @@ class CategoryController extends \yii\web\Controller
         // 查询指定分类下精品列表
         $cateRecommond = Goods::getRecommendGoods('is_best','','5',$cid);
 
+        // 获取指定分类下筛选条件
+        $filter = Category::getFilter($cid);
+
         $data = [
+            'navigation'    =>$navigation,
             'goodsList'     =>$goods['goodsList'],
             'pagination'    =>$goods['pagination'],
-            'cateRecommond' =>$cateRecommond
+            'cateRecommond' =>$cateRecommond,
+            'filter'        =>$filter,
+            'cid'           =>$cid
         ];
 
         return $this->render('index',$data);
