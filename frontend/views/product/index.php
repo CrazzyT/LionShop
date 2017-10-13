@@ -8,64 +8,25 @@
                 <div class="product-item-holder size-big single-product-gallery small-gallery">
 
                     <div id="owl-single-product">
-                        <div class="single-product-gallery-item" id="slide1">
-                            <a data-rel="prettyphoto" href="images/products/product-gallery-01.jpg">
-                                <img class="img-responsive" alt="" src="assets/images/blank.gif" data-echo="assets/images/products/product-gallery-01.jpg" />
+                        <?php if (!empty($goodsInfo['galleries'])): foreach ($goodsInfo['galleries'] as $key=>$galleries): ?>
+                        <div class="single-product-gallery-item" id="slide<?= $key;?>">
+                            <a data-rel="prettyphoto" href="<?= $galleries['url'];?>">
+                                <img class="img-responsive" alt="" src="assets/images/blank.gif" data-echo="<?= $galleries['middle']?>" />
                             </a>
                         </div><!-- /.single-product-gallery-item -->
-
-                        <div class="single-product-gallery-item" id="slide2">
-                            <a data-rel="prettyphoto" href="images/products/product-gallery-01.jpg">
-                                <img class="img-responsive" alt="" src="assets/images/blank.gif" data-echo="assets/images/products/product-gallery-01.jpg" />
-                            </a>
-                        </div><!-- /.single-product-gallery-item -->
-
-                        <div class="single-product-gallery-item" id="slide3">
-                            <a data-rel="prettyphoto" href="images/products/product-gallery-01.jpg">
-                                <img class="img-responsive" alt="" src="assets/images/blank.gif" data-echo="assets/images/products/product-gallery-01.jpg" />
-                            </a>
-                        </div><!-- /.single-product-gallery-item -->
+                        <?php endforeach;endif;?>
                     </div><!-- /.single-product-slider -->
-
 
                     <div class="single-product-gallery-thumbs gallery-thumbs">
 
                         <div id="owl-single-product-thumbnails">
-                            <a class="horizontal-thumb active" data-target="#owl-single-product" data-slide="0" href="#slide1">
-                                <img width="67" alt="" src="assets/images/blank.gif" data-echo="assets/images/products/gallery-thumb-01.jpg" />
-                            </a>
 
-                            <a class="horizontal-thumb" data-target="#owl-single-product" data-slide="1" href="#slide2">
-                                <img width="67" alt="" src="assets/images/blank.gif" data-echo="assets/images/products/gallery-thumb-01.jpg" />
+                            <?php if (!empty($goodsInfo['galleries'])): foreach ($goodsInfo['galleries'] as $key=>$galleries): ?>
+                            <a class="horizontal-thumb active" data-target="#owl-single-product" data-slide="<?= $key;?>" href="#slide<?= $key;?>">
+                                <img width="67" alt="" src="assets/images/blank.gif" data-echo="<?= $galleries['mini'];?>" />
                             </a>
+                            <?php endforeach;endif;?>
 
-                            <a class="horizontal-thumb" data-target="#owl-single-product" data-slide="2" href="#slide3">
-                                <img width="67" alt="" src="assets/images/blank.gif" data-echo="assets/images/products/gallery-thumb-01.jpg" />
-                            </a>
-
-                            <a class="horizontal-thumb" data-target="#owl-single-product" data-slide="0" href="#slide1">
-                                <img width="67" alt="" src="assets/images/blank.gif" data-echo="assets/images/products/gallery-thumb-01.jpg" />
-                            </a>
-
-                            <a class="horizontal-thumb" data-target="#owl-single-product" data-slide="1" href="#slide2">
-                                <img width="67" alt="" src="assets/images/blank.gif" data-echo="assets/images/products/gallery-thumb-01.jpg" />
-                            </a>
-
-                            <a class="horizontal-thumb" data-target="#owl-single-product" data-slide="2" href="#slide3">
-                                <img width="67" alt="" src="assets/images/blank.gif" data-echo="assets/images/products/gallery-thumb-01.jpg" />
-                            </a>
-
-                            <a class="horizontal-thumb" data-target="#owl-single-product" data-slide="0" href="#slide1">
-                                <img width="67" alt="" src="assets/images/blank.gif" data-echo="assets/images/products/gallery-thumb-01.jpg" />
-                            </a>
-
-                            <a class="horizontal-thumb" data-target="#owl-single-product" data-slide="1" href="#slide2">
-                                <img width="67" alt="" src="assets/images/blank.gif" data-echo="assets/images/products/gallery-thumb-01.jpg" />
-                            </a>
-
-                            <a class="horizontal-thumb" data-target="#owl-single-product" data-slide="2" href="#slide3">
-                                <img width="67" alt="" src="assets/images/blank.gif" data-echo="assets/images/products/gallery-thumb-01.jpg" />
-                            </a>
                         </div><!-- /#owl-single-product-thumbnails -->
 
                         <div class="nav-holder left hidden-xs">
@@ -85,8 +46,8 @@
                     <div class="star-holder inline"><div class="star" data-score="4"></div></div>
                     <div class="availability"><label>Availability:</label><span class="available">  in stock</span></div>
 
-                    <div class="title"><a href="#">VAIO fit laptop - windows 8 SVF14322CXW</a></div>
-                    <div class="brand">sony</div>
+                    <div class="title"><a href="<?= $goodsInfo['url'] ?>"><?= $goodsInfo['goods_name'] ?></a></div>
+                    <div class="brand"><?= $goodsInfo['brand_name'] ?></div>
 
                     <div class="social-row">
                         <span class="st_facebook_hcount"></span>
@@ -100,31 +61,25 @@
                     </div>
 
                     <div class="excerpt">
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ornare turpis non risus semper dapibus. Quisque eu vehicula turpis. Donec sodales lacinia eros, sit amet auctor tellus volutpat non.</p>
+                        <p><?= $goodsInfo['goods_brief'] ?></p>
                     </div>
 
                     <div class="prices">
-                        <div class="price-current">$1740.00</div>
-                        <div class="price-prev">$2199.00</div>
+                        <div class="price-current"><?= $goodsInfo['shop_price'] ?></div>
+                        <div class="price-prev"><?= $goodsInfo['market_price'] ?></div>
                     </div>
                     <!-- 规格一 -->
+
+                    <?php if (!empty($goodsInfo['spec'])): foreach ($goodsInfo['spec'] as $key=>$spec): ?>
                     <div class="des_choice">
-                        <span class="fl">型号选择：</span>
+                        <span class="fl"><?= $key?>：</span>
                         <ul>
-                            <li class="checked">30ml<div class="ch_img"></div></li>
-                            <li>50ml<div class="ch_img"></div></li>
-                            <li>100ml<div class="ch_img"></div></li>
+                            <?php if (!empty($spec)): foreach ($spec as $k=>$v): ?>
+                                <li data-content="<?= $k;?>"><?= $v;?><div class="ch_img"></div></li>
+                            <?php endforeach;endif;?>
                         </ul>
                     </div>
-                    <!-- 规格一 -->
-                    <div class="des_choice">
-                        <span class="fl">颜色选择：</span>
-                        <ul>
-                            <li>红色<div class="ch_img"></div></li>
-                            <li class="checked">白色<div class="ch_img"></div></li>
-                            <li>黑色<div class="ch_img"></div></li>
-                        </ul>
-                    </div>
+                    <?php endforeach;endif;?>
 
                     <div class="qnt-holder">
                         <div class="le-quantity">
@@ -155,9 +110,7 @@
 
                 <div class="tab-content">
                     <div class="tab-pane active" id="description">
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In sit amet porttitor eros. Praesent quis diam placerat, accumsan velit interdum, accumsan orci. Nunc libero sem, elementum in semper in, sollicitudin vitae dolor. Etiam sed tempus nisl. Integer vel diam nulla. Suspendisse et aliquam est. Nulla molestie ante et tortor sollicitudin, at elementum odio lobortis. Pellentesque neque enim, feugiat in elit sed, pharetra tempus metus. Pellentesque non lorem nunc. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
-
-                        <p>Sed consequat orci vel rutrum blandit. Nam non leo vel risus cursus porta quis non nulla. Vestibulum vitae pellentesque nunc. In hac habitasse platea dictumst. Cras egestas, turpis a malesuada mollis, magna tortor scelerisque urna, in pellentesque diam tellus sit amet velit. Donec vel rhoncus nisi, eget placerat elit. Phasellus dignissim nisl vel lectus vehicula, eget vehicula nisl egestas. Duis pretium sed risus dapibus egestas. Nam lectus felis, sodales sit amet turpis se.</p>
+                        <p><?= $goodsInfo['goods_desc']?></p>
 
                         <div class="meta-row">
                             <div class="inline">
@@ -187,26 +140,12 @@
 
                     <div class="tab-pane" id="additional-info">
                         <ul class="tabled-data">
+                            <?php if (!empty($goodsInfo['attr'])): foreach ($goodsInfo['attr'] as $attr): ?>
                             <li>
-                                <label>weight</label>
-                                <div class="value">7.25 kg</div>
+                                <label><?= $attr['attr_name']?></label>
+                                <div class="value"><?= $attr['attr_value']?></div>
                             </li>
-                            <li>
-                                <label>dimensions</label>
-                                <div class="value">90x60x90 cm</div>
-                            </li>
-                            <li>
-                                <label>size</label>
-                                <div class="value">one size fits all</div>
-                            </li>
-                            <li>
-                                <label>color</label>
-                                <div class="value">white</div>
-                            </li>
-                            <li>
-                                <label>guarantee</label>
-                                <div class="value">5 years</div>
-                            </li>
+                            <?php endforeach;endif;?>
                         </ul><!-- /.tabled-data -->
 
                         <div class="meta-row">
@@ -389,221 +328,44 @@
                 </div><!-- /.title-nav -->
 
                 <div id="owl-recently-viewed" class="owl-carousel product-grid-holder">
-                    <div class="no-margin carousel-item product-item-holder size-small hover">
-                        <div class="product-item">
-                            <div class="ribbon red"><span>sale</span></div>
-                            <div class="image">
-                                <img alt="" src="assets/images/blank.gif" data-echo="assets/images/products/product-11.jpg" />
-                            </div>
-                            <div class="body">
-                                <div class="title">
-                                    <a href="single-product.html">LC-70UD1U 70" class aquos 4K ultra HD</a>
-                                </div>
-                                <div class="brand">Sharp</div>
-                            </div>
-                            <div class="prices">
-                                <div class="price-current text-right">$1199.00</div>
-                            </div>
-                            <div class="hover-area">
-                                <div class="add-cart-button">
-                                    <a href="single-product.html" class="le-button">Add to Cart</a>
-                                </div>
-                                <div class="wish-compare">
-                                    <a class="btn-add-to-wishlist" href="#">Add to Wishlist</a>
-                                    <a class="btn-add-to-compare" href="#">Compare</a>
-                                </div>
-                            </div>
-                        </div><!-- /.product-item -->
-                    </div><!-- /.product-item-holder -->
 
-                    <div class="no-margin carousel-item product-item-holder size-small hover">
-                        <div class="product-item">
-                            <div class="ribbon blue"><span>new!</span></div>
-                            <div class="image">
-                                <img alt="" src="assets/images/blank.gif" data-echo="assets/images/products/product-12.jpg" />
-                            </div>
-                            <div class="body">
-                                <div class="title">
-                                    <a href="single-product.html">cinemizer OLED 3D virtual reality TV Video</a>
+                    <?php if(is_array($historyList)): foreach ($historyList as $goods):?>
+                        <div class="no-margin carousel-item product-item-holder size-small hover">
+                            <div class="product-item">
+                                <?php if($goods['is_hot']):?>
+                                    <div class="ribbon red"><span>hot</span></div>
+                                <?php endif;?>
+                                <?php if($goods['is_new']):?>
+                                    <div class="ribbon blue"><span>new</span></div>
+                                <?php endif;?>
+                                <?php if($goods['is_best']):?>
+                                    <div class="ribbon green"><span>best</span></div>
+                                <?php endif;?>
+                                <div class="image">
+                                    <img alt="" src="assets/images/blank.gif" data-echo="<?=$goods['prothumb'];?>" />
                                 </div>
-                                <div class="brand">zeiss</div>
-                            </div>
-                            <div class="prices">
-                                <div class="price-current text-right">$1199.00</div>
-                            </div>
-                            <div class="hover-area">
-                                <div class="add-cart-button">
-                                    <a href="single-product.html" class="le-button">Add to cart</a>
+                                <div class="body">
+                                    <div class="title">
+                                        <a href="<?=$goods['url'];?>"><?=$goods['goods_name'];?></a>
+                                    </div>
+                                    <div class="brand"><?=$goods['brand_name'];?></div>
                                 </div>
-                                <div class="wish-compare">
-                                    <a class="btn-add-to-wishlist" href="#">Add to Wishlist</a>
-                                    <a class="btn-add-to-compare" href="#">Compare</a>
+                                <div class="prices">
+                                    <div class="price-current text-right"><?=$goods['shop_price'];?></div>
                                 </div>
-                            </div>
-                        </div><!-- /.product-item -->
-                    </div><!-- /.product-item-holder -->
+                                <div class="hover-area">
+                                    <div class="add-cart-button">
+                                        <a href="<?=$goods['url'];?>" class="le-button">Add to Cart</a>
+                                    </div>
+                                    <div class="wish-compare">
+                                        <a class="btn-add-to-wishlist" href="#">Add to Wishlist</a>
+                                        <a class="btn-add-to-compare" href="#">Compare</a>
+                                    </div>
+                                </div>
+                            </div><!-- /.product-item -->
+                        </div><!-- /.product-item-holder -->
+                    <?php endforeach;endif;?>
 
-                    <div class=" no-margin carousel-item product-item-holder size-small hover">
-                        <div class="product-item">
-
-                            <div class="image">
-                                <img alt="" src="assets/images/blank.gif" data-echo="assets/images/products/product-13.jpg" />
-                            </div>
-                            <div class="body">
-                                <div class="title">
-                                    <a href="single-product.html">s2340T23" full HD multi-Touch Monitor</a>
-                                </div>
-                                <div class="brand">dell</div>
-                            </div>
-                            <div class="prices">
-                                <div class="price-current text-right">$1199.00</div>
-                            </div>
-                            <div class="hover-area">
-                                <div class="add-cart-button">
-                                    <a href="single-product.html" class="le-button">Add to cart</a>
-                                </div>
-                                <div class="wish-compare">
-                                    <a class="btn-add-to-wishlist" href="#">Add to Wishlist</a>
-                                    <a class="btn-add-to-compare" href="#">Compare</a>
-                                </div>
-                            </div>
-                        </div><!-- /.product-item -->
-                    </div><!-- /.product-item-holder -->
-
-                    <div class=" no-margin carousel-item product-item-holder size-small hover">
-                        <div class="product-item">
-                            <div class="ribbon blue"><span>new!</span></div>
-                            <div class="image">
-                                <img alt="" src="assets/images/blank.gif" data-echo="assets/images/products/product-14.jpg" />
-                            </div>
-                            <div class="body">
-                                <div class="title">
-                                    <a href="single-product.html">kardon BDS 7772/120 integrated 3D</a>
-                                </div>
-                                <div class="brand">harman</div>
-                            </div>
-                            <div class="prices">
-                                <div class="price-current text-right">$1199.00</div>
-                            </div>
-                            <div class="hover-area">
-                                <div class="add-cart-button">
-                                    <a href="single-product.html" class="le-button">Add to cart</a>
-                                </div>
-                                <div class="wish-compare">
-                                    <a class="btn-add-to-wishlist" href="#">Add to Wishlist</a>
-                                    <a class="btn-add-to-compare" href="#">Compare</a>
-                                </div>
-                            </div>
-                        </div><!-- /.product-item -->
-                    </div><!-- /.product-item-holder -->
-
-                    <div class=" no-margin carousel-item product-item-holder size-small hover">
-                        <div class="product-item">
-                            <div class="ribbon green"><span>bestseller</span></div>
-                            <div class="image">
-                                <img alt="" src="assets/images/blank.gif" data-echo="assets/images/products/product-15.jpg" />
-                            </div>
-                            <div class="body">
-                                <div class="title">
-                                    <a href="single-product.html">netbook acer travel B113-E-10072</a>
-                                </div>
-                                <div class="brand">acer</div>
-                            </div>
-                            <div class="prices">
-                                <div class="price-current text-right">$1199.00</div>
-                            </div>
-                            <div class="hover-area">
-                                <div class="add-cart-button">
-                                    <a href="single-product.html" class="le-button">Add to cart</a>
-                                </div>
-                                <div class="wish-compare">
-                                    <a class="btn-add-to-wishlist" href="#">Add to Wishlist</a>
-                                    <a class="btn-add-to-compare" href="#">Compare</a>
-                                </div>
-                            </div>
-                        </div><!-- /.product-item -->
-                    </div><!-- /.product-item-holder -->
-
-                    <div class=" no-margin carousel-item product-item-holder size-small hover">
-                        <div class="product-item">
-
-                            <div class="image">
-                                <img alt="" src="assets/images/blank.gif" data-echo="assets/images/products/product-16.jpg" />
-                            </div>
-                            <div class="body">
-                                <div class="title">
-                                    <a href="single-product.html">iPod touch 5th generation,64GB, blue</a>
-                                </div>
-                                <div class="brand">apple</div>
-                            </div>
-                            <div class="prices">
-                                <div class="price-current text-right">$1199.00</div>
-                            </div>
-                            <div class="hover-area">
-                                <div class="add-cart-button">
-                                    <a href="single-product.html" class="le-button">Add to cart</a>
-                                </div>
-                                <div class="wish-compare">
-                                    <a class="btn-add-to-wishlist" href="#">Add to Wishlist</a>
-                                    <a class="btn-add-to-compare" href="#">Compare</a>
-                                </div>
-                            </div>
-                        </div><!-- /.product-item -->
-                    </div><!-- /.product-item-holder -->
-
-                    <div class=" no-margin carousel-item product-item-holder size-small hover">
-                        <div class="product-item">
-
-                            <div class="image">
-                                <img alt="" src="assets/images/blank.gif" data-echo="assets/images/products/product-13.jpg" />
-                            </div>
-                            <div class="body">
-                                <div class="title">
-                                    <a href="single-product.html">s2340T23" full HD multi-Touch Monitor</a>
-                                </div>
-                                <div class="brand">dell</div>
-                            </div>
-                            <div class="prices">
-                                <div class="price-current text-right">$1199.00</div>
-                            </div>
-                            <div class="hover-area">
-                                <div class="add-cart-button">
-                                    <a href="single-product.html" class="le-button">Add to cart</a>
-                                </div>
-                                <div class="wish-compare">
-                                    <a class="btn-add-to-wishlist" href="#">Add to Wishlist</a>
-                                    <a class="btn-add-to-compare" href="#">Compare</a>
-                                </div>
-                            </div>
-                        </div><!-- /.product-item -->
-                    </div><!-- /.product-item-holder -->
-
-                    <div class=" no-margin carousel-item product-item-holder size-small hover">
-                        <div class="product-item">
-                            <div class="ribbon blue"><span>new!</span></div>
-                            <div class="image">
-                                <img alt="" src="assets/images/blank.gif" data-echo="assets/images/products/product-14.jpg" />
-                            </div>
-                            <div class="body">
-                                <div class="title">
-                                    <a href="single-product.html">kardon BDS 7772/120 integrated 3D</a>
-                                </div>
-                                <div class="brand">harman</div>
-                            </div>
-                            <div class="prices">
-                                <div class="price-current text-right">$1199.00</div>
-                            </div>
-                            <div class="hover-area">
-                                <div class="add-cart-button">
-                                    <a href="single-product.html" class="le-button">Add to cart</a>
-                                </div>
-                                <div class="wish-compare">
-                                    <a class="btn-add-to-wishlist" href="#">Add to Wishlist</a>
-                                    <a class="btn-add-to-compare" href="#">Compare</a>
-                                </div>
-                            </div>
-                        </div><!-- /.product-item -->
-                    </div><!-- /.product-item-holder -->
                 </div><!-- /#recently-carousel -->
 
             </div><!-- /.carousel-holder -->

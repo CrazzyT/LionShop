@@ -2,10 +2,10 @@
     <div class="col-sm-4 col-md-3  no-margin product-item-holder hover">
         <div class="product-item">
             <?php if($goods['is_new']):?>
-                <div class="ribbon blue"><span>new</span></div>
+                <div class="ribbon blue"><span>新品</span></div>
             <?php endif;?>
             <?php if($goods['is_hot']):?>
-                <div class="ribbon red"><span>hot</span></div>
+                <div class="ribbon red"><span>热销</span></div>
             <?php endif;?>
 
             <div class="image">

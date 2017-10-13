@@ -13,9 +13,6 @@ class CategoryController extends \yii\web\Controller
 
     public function actionIndex()
     {
-        // 查询主导航
-        $this->view->params['navigation'] = Category::getNavigation();
-
         //查询分类信息
         $cid = intval(Yii::$app->request->get('cid',0));
         $catInfo = Category::getCategoryInfo($cid);
@@ -32,7 +29,7 @@ class CategoryController extends \yii\web\Controller
         $this->view->params['breadcrumb'] = Category::getBreadcrumb($cid);
 
         // 查询分类商品
-        $goods = Goods::getGoodsByCatId($cid);
+        $goods = Goods::getGoodsByCatId($cid,$this->buildFilter());
 
         // 查询指定分类下精品列表
         $cateRecommond = Goods::getRecommendGoods('is_best','','5',$cid);
@@ -52,4 +49,27 @@ class CategoryController extends \yii\web\Controller
         return $this->render('index',$data);
     }
 
+    /**
+     * 构造搜索条件
+     *
+     * @return array
+     */
+    private function buildFilter()
+    {
+        $filter = [];
+        $bids = Yii::$app->request->get('bid','');
+        $price = Yii::$app->request->get('price');
+        // 品牌搜索
+        if(!empty($bids))
+        {
+            $filter[] = ['in','brand_id',$bids];
+        }
+        // 价格区间
+        if(!empty($price))
+        {
+            $rangePrice = explode(',',$price);
+            $filter[] = ['between','shop_price',$rangePrice[0],$rangePrice[1]];
+        }
+        return $filter;
+    }
 }

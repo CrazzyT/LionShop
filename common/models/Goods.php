@@ -336,17 +336,79 @@ class Goods extends \yii\db\ActiveRecord
 
     /**
      * 查询指定分类下商品列表
+     *
+     * @param $catId
+     * @return array
      */
-    static function getGoodsByCatId($catId)
+    static function getGoodsByCatId($catId,$map=[])
     {
         $query = self::find()
             ->select('goods_id,goods_name,goods_brief,market_price,shop_price,brand_id,goods_img,is_new,is_hot,is_best')
             ->where(Category::buildInCondition($catId))
             ->andWhere(['is_on_sale'=>self::IS_ON_SALE,'is_delete'=>self::IS_NOT_DELETE]);
+        // 使用搜索条件
+        if(!empty($map))
+        {
+            foreach ($map as $value)
+            {
+                $query->andWhere($value);
+            }
+        }
         // 分页
         $pagination = new Pagination(['totalCount'=>$query->count(),'defaultPageSize'=>3]);
         // 根据分页限制查询数据
         $goodsQuery = $query->offset($pagination->offset)->limit($pagination->limit)->all();
         return ['goodsList'=>self::disposeGoodsData($goodsQuery),'pagination'=>$pagination];
+    }
+
+    /**
+     * 查询商品详情
+     */
+    static function getGoodsInfo($gid)
+    {
+        $res = [];
+
+        $query = self::find()
+            ->select('goods_id,goods_name,goods_brief,market_price,shop_price,brand_id,goods_img,is_new,is_hot,is_best,goods_desc')
+            ->where('goods_id=:gid',[':gid'=>$gid])
+            ->andWhere(['is_on_sale'=>self::IS_ON_SALE,'is_delete'=>self::IS_NOT_DELETE])
+            ->one();
+
+        //关联查询品牌
+        if (isset($query) && !empty($query))
+        {
+            $res = ArrayHelper::toArray($query);
+
+            $res['shop_price'] = Tools::formatMoney($res['shop_price']);
+            $res['market_price'] = Tools::formatMoney($res['market_price']);
+            $res['url'] = Tools::buildUrl(['product/index','gid'=>$res['goods_id']]);
+            $res['brand_name'] = $query->brand->brand_name;
+
+            //关联查询相册
+            $res['galleries'] = (new GoodsGallery)->getGalleries($gid);
+
+            //关联查询规格属性
+            $arrtibute = (new GoodsAttr)->getAttribute($gid);
+            $res['spec'] = isset($arrtibute['spec']) ? $arrtibute['spec'] : '';
+            $res['attr'] = isset($arrtibute['attr']) ? $arrtibute['attr'] : '';
+        }
+        return $res;
+    }
+
+    static function historyList($gids)
+    {
+        if(!empty($gids))
+        {
+            $query = self::find()
+                ->select('goods_id,goods_name,market_price,shop_price,brand_id,goods_img,is_new,is_hot,is_best')
+                ->where(['is_on_sale'=>self::IS_ON_SALE,'is_delete'=>self::IS_NOT_DELETE])
+                ->andWhere(['in','goods_id',$gids])
+                ->all();
+            if(!empty($query))
+            {
+                return self::disposeGoodsData($query);
+            }
+        }
+        return [];
     }
 }
