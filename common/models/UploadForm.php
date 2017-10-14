@@ -33,7 +33,7 @@ class UploadForm extends Model
     public function rules()
     {
         return [
-            [['imageFile'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg, gif'],
+            [['imageFile'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png,jpg,gif'],
         ];
     }
 

@@ -115,16 +115,16 @@ class BrandController extends IndexController
                 $res = $brand->save();
                 if($res)
                 {
-                    $this->success('修改成功.',['brand/list']);
+                    Tools::success('修改成功.',['brand/list']);
                 }
                 else
                 {
-                    $this->error('没有修改或修改失败');
+                    Tools::error('没有修改或修改失败');
                 }
             }
             else
             {
-                $this->error('数据不合法.');
+                Tools::error('数据不合法.');
             }
         }
         return $this->render('update',['brand'=>$brand]);
