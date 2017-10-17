@@ -48,7 +48,7 @@
         <div class="container">
             <div class="col-xs-12 col-sm-6 no-margin">
                 <ul>
-                    <li><a href="index.html">主页</a></li>
+                    <li><a href="/index.php?r=index/index">主页</a></li>
                     <li><a href="faq.html">帮助</a></li>
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#pages">页面</a>
@@ -76,21 +76,24 @@
 
             <div class="col-xs-12 col-sm-6 no-margin">
                 <ul class="right">
-                    <!-- 已登录 -->
-                    <li>您好 , 欢迎您回来 Crazy </li>
-                    <li><a href="authentication.html">我的订单</a></li>
-                    <li class="dropdown">
-                        <a class="dropdown-toggle"  data-toggle="dropdown" href="#change-language">个人中心</a>
-                        <ul class="dropdown-menu" role="menu" >
-                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">我的关注</a></li>
-                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">降价商品</a></li>
-                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">消息</a></li>
-                        </ul>
-                    </li>
-
-                    <!-- 未登录 -->
-                    <li><a href="authentication.html">注册</a></li>
-                    <li><a href="authentication.html">登录</a></li>
+                    <?php if (Yii::$app->user->isGuest): ?>
+                        <!-- 未登录 -->
+                        <li><a href="<?= \yii\helpers\Url::to(['site/signup']);?>">注册</a></li>
+                        <li><a href="<?= \yii\helpers\Url::to(['site/signup']);?>">登录</a></li>
+                    <?php else: ?>
+                        <!-- 已登录 -->
+                        <li>您好 , 欢迎您回来 <?= Yii::$app->user->identity->username;?> </li>
+                        <li><a href="<?= \yii\helpers\Url::to(['site/logout']);?>">安全退出</a></li>
+                        <li><a href="authentication.html">我的订单</a></li>
+                        <li class="dropdown">
+                            <a class="dropdown-toggle"  data-toggle="dropdown" href="#change-language">个人中心</a>
+                            <ul class="dropdown-menu" role="menu" >
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">我的关注</a></li>
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">降价商品</a></li>
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">消息</a></li>
+                            </ul>
+                        </li>
+                    <?php endif;?>
                 </ul>
             </div><!-- /.col -->
         </div><!-- /.container -->
@@ -102,7 +105,7 @@
             <div class="col-xs-12 col-sm-12 col-md-3 logo-holder">
                 <!-- ============================================================= LOGO ============================================================= -->
                 <div class="logo">
-                    <a href="index.html">
+                    <a href="/index.php?r=index/index">
                         <!--<img alt="logo" src="assets/images/logo.svg" width="233" height="54"/>-->
                         <!--<object id="sp" type="image/svg+xml" data="assets/images/logo.svg" width="233" height="54"></object>-->
                         <svg width="233px" height="54px" viewBox="0 0 233 54" version="1.1" xmlns="http://www.w3.org/2000/svg">
