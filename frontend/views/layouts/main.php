@@ -179,7 +179,7 @@
 
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                                 <div class="basket-item-count">
-                                    <span class="count">3</span>
+                                    <span class="count">99</span>
                                     <img src="assets/images/icon-cart.png" alt="" />
                                 </div>
 
@@ -192,39 +192,7 @@
                             </a>
 
                             <ul class="dropdown-menu">
-                                <li>
-                                    <div class="basket-item">
-                                        <div class="row">
-                                            <div class="col-xs-4 col-sm-4 no-margin text-center">
-                                                <div class="thumb">
-                                                    <img alt="" src="assets/images/products/product-small-01.jpg" />
-                                                </div>
-                                            </div>
-                                            <div class="col-xs-8 col-sm-8 no-margin">
-                                                <div class="title">Blueberry</div>
-                                                <div class="price">$270.00</div>
-                                            </div>
-                                        </div>
-                                        <a class="close-btn" href="#"></a>
-                                    </div>
-                                </li>
 
-                                <li>
-                                    <div class="basket-item">
-                                        <div class="row">
-                                            <div class="col-xs-4 col-sm-4 no-margin text-center">
-                                                <div class="thumb">
-                                                    <img alt="" src="assets/images/products/product-small-01.jpg" />
-                                                </div>
-                                            </div>
-                                            <div class="col-xs-8 col-sm-8 no-margin">
-                                                <div class="title">Blueberry</div>
-                                                <div class="price">$270.00</div>
-                                            </div>
-                                        </div>
-                                        <a class="close-btn" href="#"></a>
-                                    </div>
-                                </li>
 
                                 <li>
                                     <div class="basket-item">

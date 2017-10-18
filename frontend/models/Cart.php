@@ -2,8 +2,10 @@
 
 namespace frontend\models;
 
+use common\helpers\Tools;
 use common\models\Goods;
 use common\models\Product;
+use common\models\UploadForm;
 use Yii;
 use yii\helpers\ArrayHelper;
 
@@ -187,6 +189,26 @@ class Cart extends \yii\db\ActiveRecord
             }
             return $product;
         }
+    }
+
+    static  function getCartList($uid)
+    {
+        $data = self::find()->where(['user_id'=>$uid])->asArray()->all();
+        $result = [];
+        foreach ($data as $k=>$v)
+        {
+            $goods = Goods::disposeGoodsData(Goods::find()->where(['goods_id'=>$v['goods_id']])->all());
+
+            foreach ($goods as $val)
+            {
+                $v['brand_name'] = $val['brand_name'];
+                $v['catbest'] = $val['catbest'];
+                $v['url'] = $val['url'];
+            }
+            $result[$k]=$v;
+        }
+        return $result;
+
     }
 
 }

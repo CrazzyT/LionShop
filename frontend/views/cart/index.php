@@ -5,19 +5,19 @@
         <div class="container">
             <!-- ========================================= CONTENT ========================================= -->
             <div class="col-xs-12 col-md-9 items-holder no-margin">
-
+                <?php if (is_array($cartLists)):foreach ($cartLists as $v):?>
                 <div class="row no-margin cart-item">
                     <div class="col-xs-12 col-sm-2 no-margin">
                         <a href="#" class="thumb-holder">
-                            <img class="lazy" alt="" src="http://placehold.it/73x73" />
+                            <img class="lazy" alt="" src="<?=$v['catbest'];?>" />
                         </a>
                     </div>
 
                     <div class="col-xs-12 col-sm-5 ">
                         <div class="title">
-                            <a href="#">white lumia 9001</a>
+                            <a href="<?= $v['url'];?>"><?= $v['goods_name'];?></a>
                         </div>
-                        <div class="brand">sony</div>
+                        <div class="brand"><?= $v['brand_name'];?></div>
                     </div>
 
                     <div class="col-xs-12 col-sm-3 no-margin">
@@ -25,7 +25,7 @@
                             <div class="le-quantity">
                                 <form>
                                     <a class="minus" href="#reduce"></a>
-                                    <input name="quantity" readonly="readonly" type="text" value="1" />
+                                    <input name="quantity" readonly="readonly" type="text" value="<?=$v['buy_number']?>" />
                                     <a class="plus" href="#add"></a>
                                 </form>
                             </div>
@@ -33,13 +33,14 @@
                     </div>
 
                     <div class="col-xs-12 col-sm-2 no-margin">
+
                         <div class="price">
-                            $2000.00
+                            ￥<?= $v['goods_price'];?>
                         </div>
                         <a class="close-btn" href="#"></a>
                     </div>
                 </div><!-- /.cart-item -->
-
+                <?php endforeach;endif;?>
             </div>
             <!-- ========================================= CONTENT : END ========================================= -->
 
@@ -52,17 +53,17 @@
                         <ul class="tabled-data no-border inverse-bold">
                             <li>
                                 <label>商品总金额</label>
-                                <div class="value pull-right">$8434.00</div>
+                                <div class="value pull-right">￥<?=$price;?>.00</div>
                             </li>
                             <li>
                                 <label>配送费</label>
-                                <div class="value pull-right">free shipping</div>
+                                <div class="value pull-right">全国包邮</div>
                             </li>
                         </ul>
                         <ul id="total-price" class="tabled-data inverse-bold no-border">
                             <li>
                                 <label>订单总金额</label>
-                                <div class="value pull-right">$8434.00</div>
+                                <div class="value pull-right">￥<?=$price;?>.00</div>
                             </li>
                         </ul>
                         <div class="buttons-holder">
@@ -71,7 +72,6 @@
                         </div>
                     </div>
                 </div><!-- /.widget -->
-
                 <div id="cupon-widget" class="widget">
                     <h1 class="border">优惠券</h1>
                     <div class="body">
