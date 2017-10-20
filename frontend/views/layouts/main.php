@@ -41,7 +41,7 @@
 
 </head>
 <body>
-
+<?php $this->beginBody() ?>
 <div class="wrapper">
     <!-- ============================================================= TOP NAVIGATION ============================================================= -->
     <nav class="top-bar animate-dropdown">
@@ -179,7 +179,7 @@
 
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                                 <div class="basket-item-count">
-                                    <span class="count">99</span>
+                                    <span class="count">3</span>
                                     <img src="assets/images/icon-cart.png" alt="" />
                                 </div>
 
@@ -192,7 +192,39 @@
                             </a>
 
                             <ul class="dropdown-menu">
+                                <li>
+                                    <div class="basket-item">
+                                        <div class="row">
+                                            <div class="col-xs-4 col-sm-4 no-margin text-center">
+                                                <div class="thumb">
+                                                    <img alt="" src="assets/images/products/product-small-01.jpg" />
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-8 col-sm-8 no-margin">
+                                                <div class="title">Blueberry</div>
+                                                <div class="price">$270.00</div>
+                                            </div>
+                                        </div>
+                                        <a class="close-btn" href="#"></a>
+                                    </div>
+                                </li>
 
+                                <li>
+                                    <div class="basket-item">
+                                        <div class="row">
+                                            <div class="col-xs-4 col-sm-4 no-margin text-center">
+                                                <div class="thumb">
+                                                    <img alt="" src="assets/images/products/product-small-01.jpg" />
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-8 col-sm-8 no-margin">
+                                                <div class="title">Blueberry</div>
+                                                <div class="price">$270.00</div>
+                                            </div>
+                                        </div>
+                                        <a class="close-btn" href="#"></a>
+                                    </div>
+                                </li>
 
                                 <li>
                                     <div class="basket-item">
@@ -235,7 +267,7 @@
     </header>
     <!-- ============================================================= HEADER : END ============================================================= -->
 
-    <?= $content;?>
+    <?=$content;?>
 
     <!-- ============================================================= FOOTER ============================================================= -->
     <footer id="footer" class="color-bg">
@@ -594,12 +626,10 @@
 <script src="assets/js/wow.min.js"></script>
 <script src="assets/js/scripts.js"></script>
 
-
 <script src="assets/layer/layer.js"></script>
 <script src="assets/js/common.js"></script>
 
 <!-- <script src="http://w.sharethis.com/button/buttons.js"></script> -->
-
+<?php $this->endBody() ?>
 </body>
 </html>
-

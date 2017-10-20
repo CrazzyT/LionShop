@@ -7,6 +7,6 @@
  */
 
 return [
-    'pageSize' => 2,
+    'pageSize' => 5,
     'snPrefix'  => 'Yii',       // 货号前缀
 ];

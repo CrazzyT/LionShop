@@ -1,7 +1,10 @@
 <?php
+
 namespace common\models;
+
 use Yii;
 use yii\base\Exception;
+
 /**
  * This is the model class for table "{{%goods_attr}}".
  *
@@ -19,6 +22,7 @@ class GoodsAttr extends \yii\db\ActiveRecord
     const IS_SPEC = 1;  // 规格
 
     public $attrValueErr = null;
+
     /**
      * @inheritdoc
      */
@@ -26,6 +30,7 @@ class GoodsAttr extends \yii\db\ActiveRecord
     {
         return '{{%goods_attr}}';
     }
+
     /**
      * @inheritdoc
      */
@@ -39,6 +44,7 @@ class GoodsAttr extends \yii\db\ActiveRecord
             [['goods_id'], 'exist', 'skipOnError' => true, 'targetClass' => Goods::className(), 'targetAttribute' => ['goods_id' => 'goods_id']],
         ];
     }
+
     /**
      * @inheritdoc
      */
@@ -51,6 +57,7 @@ class GoodsAttr extends \yii\db\ActiveRecord
             'attr_value' => '属性值',
         ];
     }
+
     /**
      * @return \yii\db\ActiveQuery
      */
@@ -58,6 +65,7 @@ class GoodsAttr extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Attribute::className(), ['attr_id' => 'attr_id']);
     }
+
     /**
      * @return \yii\db\ActiveQuery
      */
@@ -68,6 +76,9 @@ class GoodsAttr extends \yii\db\ActiveRecord
 
     /**
      * 根据商品 ID 查询规格
+     *
+     * @param $gid
+     * @return array|null
      */
     public function getAttribute($gid)
     {
@@ -142,6 +153,7 @@ class GoodsAttr extends \yii\db\ActiveRecord
         }
         return true;
     }
+
     /**
      * 单个商品规格属性入库
      *
@@ -161,5 +173,36 @@ class GoodsAttr extends \yii\db\ActiveRecord
             }
         }
         return true;
+    }
+
+    /**
+     * 查询购物车商品规格
+     *
+     * @param $attrList
+     * @return string
+     */
+    static public function getFormatSpec($attrList)
+    {
+        if(!empty($attrList))
+        {
+            $goodAttr = self::findAll(json_decode($attrList,true));
+            if(!is_null($goodAttr))
+            {
+                $spec = '';
+                foreach ($goodAttr as $key=>$value)
+                {
+                    $spec .= $value->attr->attr_name .':'.$value->attr_value.'<br>';
+                }
+                return $spec;
+            }
+            else
+            {
+                return null;
+            }
+        }
+        else
+        {
+            return null;
+        }
     }
 }

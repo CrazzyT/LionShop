@@ -1,14 +1,12 @@
 <?php
-
 namespace frontend\models;
-
 use common\helpers\Tools;
 use common\models\Goods;
+use common\models\GoodsAttr;
 use common\models\Product;
 use common\models\UploadForm;
 use Yii;
 use yii\helpers\ArrayHelper;
-
 /**
  * This is the model class for table "{{%cart}}".
  *
@@ -27,6 +25,7 @@ use yii\helpers\ArrayHelper;
  */
 class Cart extends \yii\db\ActiveRecord
 {
+    public $product_sn;
     /**
      * @inheritdoc
      */
@@ -34,7 +33,6 @@ class Cart extends \yii\db\ActiveRecord
     {
         return '{{%cart}}';
     }
-
     /**
      * @inheritdoc
      */
@@ -51,7 +49,6 @@ class Cart extends \yii\db\ActiveRecord
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
-
     /**
      * @inheritdoc
      */
@@ -69,7 +66,6 @@ class Cart extends \yii\db\ActiveRecord
             'user_id' => 'User ID',
         ];
     }
-
     /**
      * @return \yii\db\ActiveQuery
      */
@@ -77,7 +73,6 @@ class Cart extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Goods::className(), ['goods_id' => 'goods_id']);
     }
-
     /**
      * @return \yii\db\ActiveQuery
      */
@@ -85,29 +80,19 @@ class Cart extends \yii\db\ActiveRecord
 //    {
 //        return $this->hasOne(User::className(), ['user_id' => 'user_id']);
 //    }
-
     public static function addToCart($gid,$num,$spec)
     {
         // code 1:成功;0:失败;
         // $result = ['msg'=>'','code'=>1];
-        if (Yii::$app->user->isGuest)
+        // 假设用户已登录 UID = 1;
+        if(Yii::$app->user->isGuest)
         {
-            return ['msg'=>'请登录','code'=>0];
+            return ['msg'=>'请先登录后再操作.','code'=>0];
         }
         else
         {
             $userId = Yii::$app->user->getId();
         }
-
-
-        /**
-         * 1.先判断当前登录会员是否已加入该商品至购物车
-         * 2.Yes： 更新购买数量，（判断该商品【商品或货品】的库存是否满足购买量）
-         * 3.No：新增一条购买购买记录。
-         *      根据规格是否为空，判断购买的是商品还是货品，
-         *      规格为空：（商品）
-         *      规格不为空：（货品+商品）
-         */
         // 1.验证库存
         $info = self::getInfo($gid,$spec);
         if(!empty($info) && $info['product_num'] > $num)
@@ -182,6 +167,7 @@ class Cart extends \yii\db\ActiveRecord
             $product = Product::find()->select('product_id,product_price AS goods_price,product_sn as goods_sn,attr_list,goods_id,product_num')
                 ->where('goods_id=:gid AND attr_list=:attrs',[':gid'=>$gid,':attrs'=>$spec])
                 ->asArray()->one();
+//            echo $query->createCommand()->getRawSql();
             if(!is_null($product))
             {
                 $goods = Goods::find()->select('goods_name')->where(['goods_id'=>$product['goods_id']])->asArray()->one();
@@ -190,25 +176,41 @@ class Cart extends \yii\db\ActiveRecord
             return $product;
         }
     }
-
-    static  function getCartList($uid)
+    static function getCartList()
     {
-        $data = self::find()->where(['user_id'=>$uid])->asArray()->all();
-        $result = [];
-        foreach ($data as $k=>$v)
+        $goodsAmount = 0;       // 商品总金额
+        $orderAmount = 0;       // 订单总金额
+        $shipFee = 0;           // 配送费用
+        $data = ['goodsList'=>[],'format_ship_fee'=>0,'format_order_amount'=>0,'format_goods_amount'=>0];     // 返回的购物车数据
+        $uid = Yii::$app->user->getId();
+        $carts = self::findAll(['user_id'=>$uid]);
+        if(!is_null($carts))
         {
-            $goods = Goods::disposeGoodsData(Goods::find()->where(['goods_id'=>$v['goods_id']])->all());
-
-            foreach ($goods as $val)
+            $upload = new UploadForm();
+            $goodsList = [];
+            foreach ($carts as $key=>$goods)
             {
-                $v['brand_name'] = $val['brand_name'];
-                $v['catbest'] = $val['catbest'];
-                $v['url'] = $val['url'];
+                $tempGoods = ArrayHelper::toArray($goods);
+                $tempGoods['brand_name'] = $goods->goods->brand->brand_name;
+                $tempGoods['thumb'] = $upload->getDownloadUrl($goods->goods->goods_img,'catbest');
+                $tempGoods['format_goods_total'] = Tools::formatMoney($tempGoods['goods_price']*$tempGoods['buy_number']);
+                if(!empty($tempGoods['attr_list']))
+                {
+                    $tempGoods['spec'] = GoodsAttr::getFormatSpec($tempGoods['attr_list']);
+                }
+                $tempGoods['url'] = Tools::buildUrl(['product/index','gid'=>$goods['goods_id']]);
+                $goodsAmount += $tempGoods['goods_price']*$tempGoods['buy_number'];
+                $goodsList[] = $tempGoods;
             }
-            $result[$k]=$v;
+            // 配送费用
+            $shipFee = ($goodsAmount >= 88) ? 0 : 10;
+            // 订单费用
+            $orderAmount = $shipFee + $goodsAmount;
+            return ['goodsList'=>$goodsList,'format_ship_fee'=>Tools::formatMoney($shipFee),'format_order_amount'=>Tools::formatMoney($orderAmount),'format_goods_amount'=>Tools::formatMoney($goodsAmount)];
         }
-        return $result;
-
+        else
+        {
+            return $data;
+        }
     }
-
 }
