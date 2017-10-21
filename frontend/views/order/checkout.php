@@ -1,5 +1,6 @@
 <?php
 /* @var $this yii\web\View */
+use yii\widgets\ActiveForm;
 ?>
 <!-- ========================================= CONTENT ========================================= -->
 <section id="checkout-page">
@@ -8,7 +9,8 @@
 
                 <div class="billing-address">
                     <h2 class="border h1">收货人信息</h2>
-                    <form>
+
+                    <?php $form = ActiveForm::begin(); ?>
                         <div class="row field-row">
                             <div class="col-xs-12 col-sm-6">
                                 <label>full name*</label>
@@ -61,7 +63,8 @@
                             </div>
                         </div><!-- /.field-row -->
 
-                    </form>
+                        <?php ActiveForm::end(); ?>
+
                 </div><!-- /.billing-address -->
 
 

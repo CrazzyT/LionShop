@@ -31,9 +31,11 @@ use yii\widgets\ActiveForm;
                         <?= $form->field($model, 'shop_price')->textInput(['class' => 'span8 inline-input','placeholder'=>'本店售价'])->label('本店价:');?>
                     </div>
                     <div class="field-box">
+                        <?= $form->field($model, 'market_price')->textInput(['class' => 'span8 inline-input','placeholder'=>'商场价'])->label('商场价:');?>
+                    </div>
+                    <div class="field-box">
                         <?= $form->field($model, 'promote_price')->textInput(['class' => 'span8 inline-input','placeholder'=>'促销价'])->label('促销价:');?>
                     </div>
-
                     <div class="field-box">
                         <?= $form->field($model, 'promote_start_date')->textInput(['class' => 'input-large datepicker'])->label('促销开始时间:');?>
                     </div>

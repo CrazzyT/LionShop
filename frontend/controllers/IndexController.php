@@ -5,6 +5,7 @@ namespace frontend\controllers;
 use common\models\Category;
 use common\models\Goods;
 use common\models\GoodsGallery;
+use frontend\models\Cart;
 use frontend\models\Slider;
 use yii;
 
@@ -32,6 +33,7 @@ class IndexController extends \yii\web\Controller
             'promotes'  =>$promotes,
             'mainPromote'=>$mainPromote
         ];
+
         return $this->render('index',$data);
     }
 
@@ -48,4 +50,6 @@ class IndexController extends \yii\web\Controller
 
         return !empty($goodsList) ? $this->renderPartial('loadmore',['goodsList'=>$goodsList]) : '';
     }
+
+
 }
