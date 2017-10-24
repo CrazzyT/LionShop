@@ -72,7 +72,6 @@ class OrderController extends \yii\web\Controller
             }
         }
         $region = Region::getDropDownRegion();
-        var_dump($region);
         return $this->render('consignee',['userAdd'=>$model,'region'=>$region]);
     }
 }
