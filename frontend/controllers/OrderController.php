@@ -1,5 +1,7 @@
 <?php
 namespace frontend\controllers;
+use common\models\OrderInfo;
+use frontend\components\AjaxReturn;
 use frontend\models\Cart;
 use frontend\models\Payment;
 use frontend\models\Region;
@@ -72,6 +74,36 @@ class OrderController extends \yii\web\Controller
             }
         }
         $region = Region::getDropDownRegion();
+        var_dump($region);
         return $this->render('consignee',['userAdd'=>$model,'region'=>$region]);
+    }
+
+    /**
+     * 下单
+     */
+    public function actionOrderDown()
+    {
+        $aid = Yii::$app->request->get('aid');
+        $pid = Yii::$app->request->get('pid');
+        $orderInfo = [];
+        // 支付方式
+        $pay = Payment::getPayInfo($pid);
+        // 选中的收获地址
+        $address = UserAddress::getInfo($aid);
+        // 订单商品与金额
+        $cart = Cart::getCartList();
+        // 生产订单号
+        $orderInfo['order_sn'] = OrderInfo::createOrderSn();
+        // 下单
+        $result = (new OrderInfo)->createOrder(array_merge($orderInfo,$address,$cart,$pay));
+        // 清除购物车
+        Cart::clearAll();
+        // 响应
+        $result->send();
+    }
+    public function actionAlipay()
+    {
+        $get = Yii::$app->request->get();
+        var_dump($get);
     }
 }

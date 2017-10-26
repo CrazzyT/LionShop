@@ -1,17 +1,15 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: CrazyT
- * Date: 2017/10/19
- * Time: 20:08
+ * @Author  Bing Dev Team
+ * @License http://opensource.org/licenses/MIT	MIT License
+ * @Link    http://bingphp.com    <itbing@sina.cn>
+ * @Since   Version 1.0.0
+ * @Date:   2017/10/19
+ * @Time:   15:47
  */
-
 namespace frontend\components;
-
-
 use Yii;
 use yii\web\Response;
-
 class AjaxReturn
 {
     const SUCCESS = 1;
@@ -51,5 +49,9 @@ class AjaxReturn
         $response->format = Response::FORMAT_JSON;
         $response->data = ['code'=>$this->code,'msg'=>$this->msg,'data'=>$this->data];
         $response->send();
+    }
+    public function returned()
+    {
+        return $this;
     }
 }
