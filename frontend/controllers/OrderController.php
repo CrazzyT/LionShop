@@ -69,15 +69,17 @@ class OrderController extends \yii\web\Controller
                 }
                 else
                 {
-                    echo 'save faill';
+                    Yii::$app->session->setFlash('error','save faill');
                 }
+            }
+            else
+            {
+                Yii::$app->session->setFlash('error','validate faill');
             }
         }
         $region = Region::getDropDownRegion();
-        var_dump($region);
         return $this->render('consignee',['userAdd'=>$model,'region'=>$region]);
     }
-
     /**
      * 下单
      */
@@ -100,6 +102,16 @@ class OrderController extends \yii\web\Controller
         Cart::clearAll();
         // 响应
         $result->send();
+    }
+    public function actionRegion()
+    {
+        $rid = intval(Yii::$app->request->get('rid'));
+        if($rid)
+        {
+            $region = Region::getDropDownRegion($rid);
+            (new AjaxReturn(AjaxReturn::SUCCESS,'OK',$region))->send();
+        }
+        (new AjaxReturn(AjaxReturn::ERROR,'参数有误'))->send();
     }
     public function actionAlipay()
     {

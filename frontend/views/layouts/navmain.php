@@ -1,3 +1,10 @@
+<?php
+
+use frontend\models\Cart;
+// 查询购物车商品
+$cart = Cart::getCartList();
+$this->params['cart'] = $cart;
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -48,7 +55,7 @@
         <div class="container">
             <div class="col-xs-12 col-sm-6 no-margin">
                 <ul>
-                    <li><a href="/index.php?r=index/index">主页</a></li>
+                    <li><a href="index.html">主页</a></li>
                     <li><a href="faq.html">帮助</a></li>
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#pages">页面</a>
@@ -76,14 +83,14 @@
 
             <div class="col-xs-12 col-sm-6 no-margin">
                 <ul class="right">
-                    <?php if (Yii::$app->user->isGuest): ?>
+                    <?php if(Yii::$app->user->isGuest): ?>
                         <!-- 未登录 -->
-                        <li><a href="<?= \yii\helpers\Url::to(['site/signup']);?>">注册</a></li>
-                        <li><a href="<?= \yii\helpers\Url::to(['site/signup']);?>">登录</a></li>
+                        <li><a href="<?=\yii\helpers\Url::to(['site/signup']);?>">注册</a></li>
+                        <li><a href="<?=\yii\helpers\Url::to(['site/signup']);?>">登录</a></li>
                     <?php else: ?>
                         <!-- 已登录 -->
-                        <li>您好 , 欢迎您回来 <?= Yii::$app->user->identity->username;?> </li>
-                        <li><a href="<?= \yii\helpers\Url::to(['site/logout']);?>">安全退出</a></li>
+                        <li>您好 , 欢迎您回来 <?=Yii::$app->user->identity->username;?> </li>
+                        <li><a href="<?=\yii\helpers\Url::to(['site/logout']);?>">安全退出</a></li>
                         <li><a href="authentication.html">我的订单</a></li>
                         <li class="dropdown">
                             <a class="dropdown-toggle"  data-toggle="dropdown" href="#change-language">个人中心</a>
@@ -94,6 +101,7 @@
                             </ul>
                         </li>
                     <?php endif;?>
+
                 </ul>
             </div><!-- /.col -->
         </div><!-- /.container -->
@@ -105,7 +113,7 @@
             <div class="col-xs-12 col-md-3 logo-holder">
                 <!-- ============================================================= LOGO ============================================================= -->
                 <div class="logo">
-                    <a href="/index.php?r=index/index">
+                    <a href="index.html">
                         <!--<img alt="logo" src="assets/images/logo.svg" width="233" height="54"/>-->
                         <!--<object id="sp" type="image/svg+xml" data="assets/images/logo.svg" width="233" height="54"></object>-->
                         <svg width="233px" height="54px" viewBox="0 0 233 54" version="1.1" xmlns="http://www.w3.org/2000/svg">
@@ -172,7 +180,7 @@
             <div class="col-xs-12 col-md-3 top-cart-row no-margin">
                 <div class="top-cart-row-container">
 
-    <!-- ============================================================= SHOPPING CART DROPDOWN ============================================================= -->
+                    <!-- ============================================================= SHOPPING CART DROPDOWN ============================================================= -->
                     <div class="top-cart-holder dropdown animate-dropdown">
 
                         <?php if(!Yii::$app->user->isGuest): ?>
@@ -180,90 +188,23 @@
 
                                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                                     <div class="basket-item-count">
-                                        <span class="count">0</span>
+                                        <span class="count"><?=count($this->params['cart']['goodsList'])?></span>
                                         <img src="assets/images/icon-cart.png" alt="" />
                                     </div>
 
                                     <div class="total-price-basket">
                                         <span class="lbl">your cart:</span>
                                         <span class="total-price">
-                        <span class="sign">￥</span><span class="value">0,00</span>
+                        <span class="sign"></span><span class="value"><?= $this->params['cart']['format_goods_amount']?></span>
                     </span>
                                     </div>
                                 </a>
 
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <div class="basket-item">
-                                            <div class="row">
-                                                <div class="col-xs-4 col-sm-4 no-margin text-center">
-                                                    <div class="thumb">
-                                                        <img alt="" src="assets/images/products/product-small-01.jpg" />
-                                                    </div>
-                                                </div>
-                                                <div class="col-xs-8 col-sm-8 no-margin">
-                                                    <div class="title">Blueberry</div>
-                                                    <div class="price">$270.00</div>
-                                                </div>
-                                            </div>
-                                            <a class="close-btn" href="#"></a>
-                                        </div>
-                                    </li>
-
-                                    <li>
-                                        <div class="basket-item">
-                                            <div class="row">
-                                                <div class="col-xs-4 col-sm-4 no-margin text-center">
-                                                    <div class="thumb">
-                                                        <img alt="" src="assets/images/products/product-small-01.jpg" />
-                                                    </div>
-                                                </div>
-                                                <div class="col-xs-8 col-sm-8 no-margin">
-                                                    <div class="title">Blueberry</div>
-                                                    <div class="price">$270.00</div>
-                                                </div>
-                                            </div>
-                                            <a class="close-btn" href="#"></a>
-                                        </div>
-                                    </li>
-
-                                    <li>
-                                        <div class="basket-item">
-                                            <div class="row">
-                                                <div class="col-xs-4 col-sm-4 no-margin text-center">
-                                                    <div class="thumb">
-                                                        <img alt="" src="assets/images/products/product-small-01.jpg" />
-                                                    </div>
-                                                </div>
-                                                <div class="col-xs-8 col-sm-8 no-margin">
-                                                    <div class="title">Blueberry</div>
-                                                    <div class="price">$270.00</div>
-                                                </div>
-                                            </div>
-                                            <a class="close-btn" href="#"></a>
-                                        </div>
-                                    </li>
-
-
-                                    <li class="checkout">
-                                        <div class="basket-item">
-                                            <div class="row">
-                                                <div class="col-xs-12 col-sm-6">
-                                                    <a href="cart.html" class="le-button inverse">View cart</a>
-                                                </div>
-                                                <div class="col-xs-12 col-sm-6">
-                                                    <a href="checkout.html" class="le-button">Checkout</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </li>
-
-                                </ul>
                             </div><!-- /.basket -->
                         <?php endif; ?>
                     </div><!-- /.top-cart-holder -->
                 </div><!-- /.top-cart-row-container -->
-    <!-- ============================================================= SHOPPING CART DROPDOWN : END ======================================================== -->		                </div><!-- /.top-cart-row -->
+                <!-- ============================================================= SHOPPING CART DROPDOWN : END ============================================================= -->		</div><!-- /.top-cart-row -->
 
         </div><!-- /.container -->
 
@@ -283,28 +224,27 @@
                         <ul class="nav navbar-nav">
 
                             <?php if(is_array($this->params['navigation'])): foreach($this->params['navigation'] as $nav): ?>
-                            <li class="dropdown yamm-fw">
-                                <a href="#" class="dropdown-toggle" data-hover="dropdown" data-toggle="dropdown"><?= $nav['cat_name'];?></a>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <div class="yamm-content">
-                                            <div class="row">
-
-                                <?php if(is_array($nav['son'])): foreach($nav['son'] as $val): ?>
-                                                <div class="col-xs-12 col-sm-3">
-                                                    <h2><?= $val['cat_name']?></h2>
-                                                    <ul>
-                                    <?php if(is_array($val['son'])): foreach($val['son'] as $v): ?>
-                                                        <li><a href="<?= $v['url']?>"><?= $v['cat_name']?></a></li>
-                                    <?php endforeach;endif;?>
-                                                    </ul>
-                                                </div><!-- /.col -->
-                                <?php endforeach;endif;?>
-                                            </div><!-- /.row -->
-                                        </div><!-- /.yamm-content -->
-                                    </li>
-                                </ul>
-                            </li><!-- /.yamm-fw -->
+                                <li class="dropdown yamm-fw">
+                                    <a href="#" class="dropdown-toggle" data-hover="dropdown" data-toggle="dropdown"><?=$nav['cat_name'];?></a>
+                                    <ul class="dropdown-menu">
+                                        <li>
+                                            <div class="yamm-content">
+                                                <div class="row">
+                                                    <?php if(is_array($nav['son'])): foreach($nav['son'] as $val): ?>
+                                                        <div class="col-xs-12 col-sm-3">
+                                                            <h2><?=$val['cat_name'];?></h2>
+                                                            <ul>
+                                                                <?php if(is_array($val['son'])): foreach($val['son'] as $v): ?>
+                                                                    <li><a href="<?=$v['url'];?>"><?=$v['cat_name'];?></a></li>
+                                                                <?php endforeach;endif;?>
+                                                            </ul>
+                                                        </div><!-- /.col -->
+                                                    <?php endforeach;endif;?>
+                                                </div><!-- /.row -->
+                                            </div><!-- /.yamm-content -->
+                                        </li>
+                                    </ul>
+                                </li><!-- /.yamm-fw -->
                             <?php endforeach;endif;?>
 
                             <li class="dropdown hidden-md">
@@ -318,7 +258,6 @@
                                 </ul>
                             </li>
 
-
                         </ul><!-- /.navbar-nav -->
                     </div><!-- /.navbar-collapse -->
                 </div><!-- /.navbar -->
@@ -330,9 +269,7 @@
                 <div class="container">
                     <div class="breadcrumb-nav-holder minimal">
                         <ul class="breadcrumb-item">
-                            <?php if (!empty($this->params['breadcrumb'])):?>
-                                <?= $this->params['breadcrumb'];?>
-                            <?php endif;?>
+                            <?php if(!empty($this->params['breadcrumb'])): ?><?=$this->params['breadcrumb'];?><?php endif;?>
                         </ul>
                     </div>
                 </div><!-- /.container -->
@@ -341,7 +278,7 @@
     </header>
     <!-- ============================================================= HEADER : END ============================================================= -->
 
-    <?= $content;?>
+    <?=$content;?>
 
     <!-- ============================================================= FOOTER ============================================================= -->
     <footer id="footer" class="color-bg">
@@ -701,7 +638,8 @@
 <script src="assets/js/scripts.js"></script>
 
 <script src="assets/layer/layer.js"></script>
-<script src="assets/js/common.js"></script>
+<script src="assets/js/common.js?v=1.1"></script>
+
 <!-- <script src="http://w.sharethis.com/button/buttons.js"></script> -->
 <?php $this->endBody() ?>
 </body>
