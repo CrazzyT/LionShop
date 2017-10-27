@@ -17,6 +17,8 @@ return [
             'thumb' => 'imageView2/1/w/194/h/143/q/75|imageslim',
             'catbest' => 'imageView2/1/w/73/h/73/q/75|imageslim'
         ]
-    ]
+    ],
+
+
 
 ];

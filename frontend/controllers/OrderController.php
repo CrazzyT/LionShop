@@ -2,6 +2,7 @@
 namespace frontend\controllers;
 use common\models\OrderInfo;
 use frontend\components\AjaxReturn;
+use frontend\components\AlipaySubmit;
 use frontend\models\Cart;
 use frontend\models\Payment;
 use frontend\models\Region;
