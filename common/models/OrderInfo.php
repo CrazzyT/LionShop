@@ -1,9 +1,13 @@
 <?php
 namespace common\models;
+use common\helpers\Tools;
 use frontend\components\AjaxReturn;
+use frontend\models\Region;
 use frontend\models\User;
 use Yii;
 use yii\base\Exception;
+use yii\helpers\ArrayHelper;
+
 /**
  * This is the model class for table "{{%order_info}}".
  *
@@ -43,6 +47,9 @@ use yii\base\Exception;
  */
 class OrderInfo extends \yii\db\ActiveRecord
 {
+    const PAY_SUCCESS = 1;
+    const PAY_ERROR = 0;
+
     /**
      * @inheritdoc
      */
@@ -185,7 +192,10 @@ class OrderInfo extends \yii\db\ActiveRecord
                     throw new Exception('订单商品添加失败');
                 }
                 $transaction->commit();
-                return (new AjaxReturn(AjaxReturn::SUCCESS,'操作成功.'))->returned();
+//                $this->order_amount
+                $payUrl = Yii::$app->alipay->payUrl($this->order_sn,'大狮商城订单',0.01,'大狮商城商品');
+
+                return (new AjaxReturn(AjaxReturn::SUCCESS,'操作成功.',['url'=>$payUrl]))->returned();
             }
             catch (Exception $e)
             {
@@ -197,5 +207,75 @@ class OrderInfo extends \yii\db\ActiveRecord
         {
             return (new AjaxReturn(AjaxReturn::ERROR,$this->getFirstErrors()))->returned();
         }
+    }
+
+    /**
+     * 跟新订单支付状态
+     *
+     * @param $orderSn
+     * @param $totalFee
+     * @return bool
+     */
+    static function updateOrder($orderSn,$totalFee)
+    {
+        $order = self::findOne(['order_sn'=>$orderSn]);
+        if(!is_null($order))
+        {
+            // 判断该笔订单是否处理过
+            if($order->pay_status == self::PAY_SUCCESS) return true;
+            $order->pay_status = self::PAY_SUCCESS;
+            $order->money_paid = $totalFee;
+            $order->pay_time = time();
+            return $order->save();
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    /**
+     * 查询我的订单列表
+     *
+     * @param $userId
+     * @return array
+     */
+    static function getMyOrder($userId)
+    {
+        $result = [];
+        $myOrderList = self::findAll(['user_id'=>$userId]);
+
+        if(!is_null($myOrderList))
+        {
+            $up = new UploadForm();
+            foreach ($myOrderList as $key=>$order)
+            {
+                $result[$key] = ArrayHelper::toArray($order);
+                // 处理地区
+                $result[$key]['region'] = Region::getRegionName([$order['country'],$order['province'],$order['city'],$order['district']]);
+                // 处理金额
+                $result[$key]['format_order_amount'] = Tools::formatMoney($order['order_amount']);
+                // 查询会员名
+                $result[$key]['user_name'] = $order->user->username;
+                // 查询订单商品
+                $temp = $order->orderGoods;
+                if(is_array($temp) && !empty($temp))
+                {
+                    $orderGoods = [];
+                    foreach ($temp as $k=>$v)
+                    {
+                        $orderGoods[$k]['goods_name'] = $v->goods_name;
+                        $orderGoods[$k]['buy_number'] = $v->buy_number;
+                        $orderGoods[$k]['url'] = Tools::buildUrl(['product/index',$v->goods_id]);
+                        if(isset($v->goods->goods_img) && !empty($v->goods->goods_img))
+                        {
+                            $orderGoods[$k]['mini'] = $up->getDownloadUrl($v->goods->goods_img,'mini');
+                        }
+                    }
+                }
+                $result[$key]['order_goods'] = $orderGoods;
+            }
+        }
+        return $result;
     }
 }
