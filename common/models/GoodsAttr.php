@@ -1,10 +1,7 @@
 <?php
-
 namespace common\models;
-
 use Yii;
 use yii\base\Exception;
-
 /**
  * This is the model class for table "{{%goods_attr}}".
  *
@@ -20,9 +17,7 @@ class GoodsAttr extends \yii\db\ActiveRecord
 {
     const IS_ATTR = 0;  // 属性
     const IS_SPEC = 1;  // 规格
-
     public $attrValueErr = null;
-
     /**
      * @inheritdoc
      */
@@ -30,7 +25,6 @@ class GoodsAttr extends \yii\db\ActiveRecord
     {
         return '{{%goods_attr}}';
     }
-
     /**
      * @inheritdoc
      */
@@ -44,7 +38,6 @@ class GoodsAttr extends \yii\db\ActiveRecord
             [['goods_id'], 'exist', 'skipOnError' => true, 'targetClass' => Goods::className(), 'targetAttribute' => ['goods_id' => 'goods_id']],
         ];
     }
-
     /**
      * @inheritdoc
      */
@@ -57,7 +50,6 @@ class GoodsAttr extends \yii\db\ActiveRecord
             'attr_value' => '属性值',
         ];
     }
-
     /**
      * @return \yii\db\ActiveQuery
      */
@@ -65,7 +57,6 @@ class GoodsAttr extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Attribute::className(), ['attr_id' => 'attr_id']);
     }
-
     /**
      * @return \yii\db\ActiveQuery
      */
@@ -73,7 +64,6 @@ class GoodsAttr extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Goods::className(), ['goods_id' => 'goods_id']);
     }
-
     /**
      * 根据商品 ID 查询规格
      *
@@ -104,13 +94,11 @@ class GoodsAttr extends \yii\db\ActiveRecord
         }
         return null;
     }
-
     /**
      * 商品属性入库
+     *
      * @param $gid
      * @param $data
-     * @return bool
-     * @throws Exception
      */
     public function createAllGoodsAttr($gid,$data)
     {
@@ -153,7 +141,6 @@ class GoodsAttr extends \yii\db\ActiveRecord
         }
         return true;
     }
-
     /**
      * 单个商品规格属性入库
      *
@@ -174,9 +161,8 @@ class GoodsAttr extends \yii\db\ActiveRecord
         }
         return true;
     }
-
     /**
-     * 查询购物车商品规格
+     * 查询商品规格
      *
      * @param $attrList
      * @return string

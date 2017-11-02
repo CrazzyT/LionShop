@@ -1,6 +1,9 @@
 <?php
+
 namespace common\models;
 
+use backend\models\OrderAction;
+use backend\models\Shipping;
 use common\helpers\Tools;
 use frontend\components\AjaxReturn;
 use frontend\models\Region;
@@ -49,20 +52,18 @@ use yii\helpers\ArrayHelper;
  */
 class OrderInfo extends \yii\db\ActiveRecord
 {
-    const ORDER_UNCONFIRM = 0;
+    public $goods;
+    const ORDER_UNCONFIRM = 0;  //
     const ORDER_CONFIRM = 1;
     const ORDER_FINISH = 2;
     const ORDER_CANCEL = 3;
     const ORDER_BRACE = 4;
     const ORDER_RETURN = 5;
-
     const PAY_SUCCESS = 1;
     const PAY_ERROR = 0;
-
     const SHIP_UNSHIP = 0;
     const SHIP_SHIPED = 1;
     const SHIP_SINGNED = 2;
-
     /**
      * @inheritdoc
      */
@@ -82,10 +83,11 @@ class OrderInfo extends \yii\db\ActiveRecord
             [['order_sn', 'mobile'], 'string', 'max' => 20],
             [['message', 'address'], 'string', 'max' => 120],
             [['pay_name', 'shipping_name'], 'string', 'max' => 60],
+            [['remarks'], 'string', 'max' => 2],
             [['consignee', 'invoice_no'], 'string', 'max' => 45],
             [['zipcode'], 'string', 'max' => 6],
             [['order_sn'], 'unique'],
-//            [['shipping_id'], 'exist', 'skipOnError' => true, 'targetClass' => Shipping::className(), 'targetAttribute' => ['shipping_id' => 'shipping_id']],
+            [['shipping_id'], 'exist', 'skipOnError' => true, 'targetClass' => Shipping::className(), 'targetAttribute' => ['shipping_id' => 'shipping_id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
@@ -138,6 +140,15 @@ class OrderInfo extends \yii\db\ActiveRecord
     public function getOrderGoods()
     {
         return $this->hasMany(OrderGoods::className(), ['order_id' => 'order_id']);
+    }
+    /**
+     * 订单操作日志
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAction()
+    {
+        return $this->hasMany(OrderAction::className(),['order_id'=>'order_id']);
     }
     /**
      * @return \yii\db\ActiveQuery
@@ -205,9 +216,8 @@ class OrderInfo extends \yii\db\ActiveRecord
                     throw new Exception('订单商品添加失败');
                 }
                 $transaction->commit();
-//                $this->order_amount
-                $payUrl = Yii::$app->alipay->payUrl($this->order_sn,'大狮商城订单',0.01,'大狮商城商品');
-
+                // $this->order_amount
+                $payUrl = Yii::$app->alipay->payUrl($this->order_sn,'必应商城订单',0.11,'必应商城的商品');
                 return (new AjaxReturn(AjaxReturn::SUCCESS,'操作成功.',['url'=>$payUrl]))->returned();
             }
             catch (Exception $e)
@@ -221,7 +231,6 @@ class OrderInfo extends \yii\db\ActiveRecord
             return (new AjaxReturn(AjaxReturn::ERROR,$this->getFirstErrors()))->returned();
         }
     }
-
     /**
      * 跟新订单支付状态
      *
@@ -246,7 +255,6 @@ class OrderInfo extends \yii\db\ActiveRecord
             return false;
         }
     }
-
     /**
      * 查询我的订单列表
      *
@@ -257,7 +265,7 @@ class OrderInfo extends \yii\db\ActiveRecord
     {
         $result = [];
         $myOrderList = self::findAll(['user_id'=>$userId]);
-
+        //var_dump($myOrderList);
         if(!is_null($myOrderList))
         {
             $up = new UploadForm();
@@ -291,7 +299,6 @@ class OrderInfo extends \yii\db\ActiveRecord
         }
         return $result;
     }
-
     /**
      * 查询后台订单列表
      *
@@ -309,5 +316,39 @@ class OrderInfo extends \yii\db\ActiveRecord
             ->limit($page->limit)
             ->all();
         return ['page'=>$page,'orderList'=>$orderList];
+    }
+    /**
+     * 查询订单详情
+     *
+     * @param $id
+     * @return array|null
+     */
+    static function getOrderInfo($id)
+    {
+        $result = [];
+        $info = self::findOne($id);
+        if(!is_null($info))
+        {
+            $result = ArrayHelper::toArray($info);
+            $result['address'] = Region::getRegionName([$info['country'],$info['province'],$info['city'],$info['district']]) . $info['address'];
+            $tempGoods = ArrayHelper::toArray($info->orderGoods);
+            if(!is_null($tempGoods))
+            {
+                foreach ($tempGoods as $key=>$goods)
+                {
+                    if(!empty($goods['attr_list']))
+                    {
+                        $tempGoods[$key]['spec'] = GoodsAttr::getFormatSpec($goods['attr_list']);
+                    }
+                }
+            }
+            $result['goods'] = $tempGoods;
+            $result['action'] = ArrayHelper::toArray($info->action);
+            return $result;
+        }
+        else
+        {
+            return null;
+        }
     }
 }
