@@ -196,10 +196,15 @@ use yii\helpers\Html;
             </ul>
         </li>
         <li>
-            <a href="chart-showcase.html">
-                <i class="icon-signal"></i>
-                <span>统计</span>
+            <a class="dropdown-toggle" href="#">
+                <i class="icon-th-large"></i>
+                <span>订单管理</span>
+                <i class="icon-chevron-down"></i>
             </a>
+            <ul class="submenu">
+                <li><a href="<?= Url::to(['order/index']);?>">订单列表</a></li>
+                <li><a href="new-user.html">发货单列表</a></li>
+            </ul>
         </li>
         <li>
             <a class="dropdown-toggle" href="#">
@@ -237,6 +242,13 @@ use yii\helpers\Html;
             <a href="personal-info.html">
                 <i class="icon-cog"></i>
                 <span>我的信息</span>
+            </a>
+        </li>
+
+        <li>
+            <a href="chart-showcase.html">
+                <i class="icon-signal"></i>
+                <span>统计</span>
             </a>
         </li>
 
