@@ -53,14 +53,16 @@ use yii\helpers\ArrayHelper;
 class OrderInfo extends \yii\db\ActiveRecord
 {
     public $goods;
-    const ORDER_UNCONFIRM = 0;  //
+    const ORDER_UNCONFIRM = 0;
     const ORDER_CONFIRM = 1;
     const ORDER_FINISH = 2;
     const ORDER_CANCEL = 3;
     const ORDER_BRACE = 4;
     const ORDER_RETURN = 5;
+
     const PAY_SUCCESS = 1;
     const PAY_ERROR = 0;
+
     const SHIP_UNSHIP = 0;
     const SHIP_SHIPED = 1;
     const SHIP_SINGNED = 2;
