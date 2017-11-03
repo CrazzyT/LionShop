@@ -1,7 +1,5 @@
 <?php
-
 namespace common\models;
-
 use backend\models\OrderAction;
 use backend\models\Shipping;
 use common\helpers\Tools;
@@ -12,7 +10,6 @@ use Yii;
 use yii\base\Exception;
 use yii\data\Pagination;
 use yii\helpers\ArrayHelper;
-
 /**
  * This is the model class for table "{{%order_info}}".
  *
@@ -59,10 +56,8 @@ class OrderInfo extends \yii\db\ActiveRecord
     const ORDER_CANCEL = 3;
     const ORDER_BRACE = 4;
     const ORDER_RETURN = 5;
-
     const PAY_SUCCESS = 1;
     const PAY_ERROR = 0;
-
     const SHIP_UNSHIP = 0;
     const SHIP_SHIPED = 1;
     const SHIP_SINGNED = 2;
@@ -80,16 +75,16 @@ class OrderInfo extends \yii\db\ActiveRecord
     {
         return [
             [['order_status', 'shipping_status', 'pay_status', 'create_time', 'confirm_time', 'pay_time', 'shipping_time', 'country', 'province', 'city', 'district', 'user_id', 'pay_id'], 'integer'],
-            [['goods_amount', 'shipping_fee', 'money_paid', 'order_amount'], 'number'],
+            [['goods_amount', 'shipping_fee', 'money_paid', 'order_amount','shipping_id'], 'number'],
             [['user_id', 'pay_id'], 'required'],
             [['order_sn', 'mobile'], 'string', 'max' => 20],
             [['message', 'address'], 'string', 'max' => 120],
             [['pay_name', 'shipping_name'], 'string', 'max' => 60],
-            [['remarks'], 'string', 'max' => 2],
+            [['remarks'], 'string', 'max' => 255],
             [['consignee', 'invoice_no'], 'string', 'max' => 45],
             [['zipcode'], 'string', 'max' => 6],
             [['order_sn'], 'unique'],
-            [['shipping_id'], 'exist', 'skipOnError' => true, 'targetClass' => Shipping::className(), 'targetAttribute' => ['shipping_id' => 'shipping_id']],
+            //[['shipping_id'], 'exist', 'skipOnError' => true, 'targetClass' => Shipping::className(), 'targetAttribute' => ['shipping_id' => 'shipping_id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
@@ -178,7 +173,7 @@ class OrderInfo extends \yii\db\ActiveRecord
             2016082311 51 57 2285-1
             2016082311 51 57 2285-2
         */
-        $sn = date('YmdHis') . rand(1000,9999);
+        $sn = date('mdHis') . rand(1000,9999);
         if(self::find()->where(['order_sn'=>$sn])->count() > 0)
         {
             return self::createOrderSn();
@@ -351,6 +346,47 @@ class OrderInfo extends \yii\db\ActiveRecord
         else
         {
             return null;
+        }
+    }
+    /**
+     * 确认订单
+     *
+     * @param $orderId
+     * @return bool|null
+     */
+    static function confirmOrder($orderId)
+    {
+        $order = self::findOne($orderId);
+        if(is_null($order))
+        {
+            return null;
+        }
+        else
+        {
+            $order->order_status = self::ORDER_CONFIRM;
+            $order->confirm_time = time();
+            return $order->save();
+        }
+    }
+    /**
+     * 操作支付
+     *
+     * @param $orderId
+     * @return bool|null
+     */
+    static function payOrder($orderId)
+    {
+        $order = self::findOne($orderId);
+        if(is_null($order))
+        {
+            return null;
+        }
+        else
+        {
+            $order->pay_status = self::PAY_SUCCESS;
+            $order->pay_time = time();
+            $order->money_paid = $order->order_amount;
+            return $order->save();
         }
     }
 }

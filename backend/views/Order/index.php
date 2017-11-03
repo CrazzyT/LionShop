@@ -18,9 +18,9 @@ use common\models\OrderInfo;
                         <button class="btn">Search</button>
                     </div>
 
-                    <a href="new-user.html" class="btn-flat success pull-right">
+                    <a href="javascript:alert('未开发');" class="btn-flat success pull-right">
                         <span>&#43;</span>
-                        发布新商品
+                        搜索订单
                     </a>
                 </div>
             </div>
@@ -78,6 +78,7 @@ use common\models\OrderInfo;
                                     <span class="label label-warning">已确认</span>
                                 <?php elseif($order['order_status'] == OrderInfo::ORDER_FINISH):?>
                                     <span class="label label-success">已完成</span>
+
                                 <?php elseif($order['order_status'] == OrderInfo::ORDER_CANCEL):?>
                                     <span class="label label-danger">已取消</span>
                                 <?php endif;?>

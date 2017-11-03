@@ -8,7 +8,7 @@
     <div class="container-fluid">
         <div id="pad-wrapper" class="new-user">
             <div class="row-fluid header">
-                <h3>添加发货单号</h3>
+                <h3>取消订单</h3>
             </div>
 
             <?= $this->render('/common/message');?>
@@ -18,29 +18,25 @@
                 <div class="span9 with-sidebar">
                     <div class="container">
                         <!--<form class="new_user_form inline-input" />-->
-                        <?= \yii\helpers\Html::beginForm(['order/ship','oid'=>$oid],'post',['class'=>'new_user_form inline-input']);?>
+                        <?= \yii\helpers\Html::beginForm(['order/cancel','oid'=>$oid],'post',['class'=>'new_user_form inline-input']);?>
 
                         <div class="span12 field-box">
-                            <label>快递公司:</label>
-                            <?= \yii\helpers\Html::dropDownList('shipping_id',$order->shipping_id,$shipList);?>
+                            <label>退款方式:</label>
+                            <?= \yii\helpers\Html::radioList('cancel_type',$type,['SEND_BACK'=>'原路退回','MONEY_BACK'=>'退回用户余额','NOT_DO'=>'不处理,误操作']);?>
                         </div>
 
-                        <div class="span12 field-box">
-                            <label>发货单:</label>
-                            <?= \yii\helpers\Html::textInput('invoice_no',$order->invoice_no,['class'=>'span9']);?>
-                        </div>
 
                         <div class="span12 field-box textarea">
-                            <label>管理员备注:</label>
-                            <?= \yii\helpers\Html::textarea('remarks',$order->remarks,['class'=>'span9']);?>
+                            <label>操作备注:</label>
+                            <?= \yii\helpers\Html::textarea('node','',['class'=>'span9']);?>
                             <span class="charactersleft">剩余90个字符。字段限制在254个字符</span>
                         </div>
                         <div class="span11 field-box actions">
-                            <?= \yii\helpers\Html::submitButton('确认发货',['class'=>'btn-glow primary']);?>
+                            <?= \yii\helpers\Html::submitButton('确认取消',['class'=>'btn-glow primary']);?>
                             <span>OR</span>
                             <input type="reset" value="Cancel" class="reset" />
                         </div>
-                        <?= \yii\helpers\Html::errorSummary($order);?>
+
 
                         <?= \yii\helpers\Html::endForm();?>
                     </div>

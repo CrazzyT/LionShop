@@ -1,11 +1,9 @@
 <?php
 namespace frontend\controllers;
-
 use frontend\components\AjaxReturn;
 use frontend\models\Cart;
 use Yii;
 use yii\web\Response;
-
 class CartController extends \yii\web\Controller
 {
     public $userId;
@@ -18,7 +16,6 @@ class CartController extends \yii\web\Controller
         }
         $this->userId = Yii::$app->user->getId();
     }
-
     public function actionIndex()
     {
         // 查询购物车商品
@@ -87,7 +84,6 @@ class CartController extends \yii\web\Controller
             (new AjaxReturn(AjaxReturn::ERROR,'参数有误'))->send();
         }
     }
-
     /**
      * 加载导航栏购物车
      *
