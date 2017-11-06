@@ -50,7 +50,7 @@ use yii\helpers\ArrayHelper;
 class OrderInfo extends \yii\db\ActiveRecord
 {
     public $goods;
-    const ORDER_UNCONFIRM = 0;
+    const ORDER_UNCONFIRM = 0;  //
     const ORDER_CONFIRM = 1;
     const ORDER_FINISH = 2;
     const ORDER_CANCEL = 3;
@@ -261,7 +261,7 @@ class OrderInfo extends \yii\db\ActiveRecord
     static function getMyOrder($userId)
     {
         $result = [];
-        $myOrderList = self::findAll(['user_id'=>$userId]);
+        $myOrderList = self::find()->where(['user_id'=>$userId])->orderBy('order_id DESC')->all();
         //var_dump($myOrderList);
         if(!is_null($myOrderList))
         {

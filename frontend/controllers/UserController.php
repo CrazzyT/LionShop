@@ -1,9 +1,16 @@
 <?php
-
+/**
+ * Created by PhpStorm.
+ * @author: bing <itbing@sina.cn>
+ * @DateTime: 2017/10/30 上午11:40
+ *
+ */
 namespace frontend\controllers;
 use common\models\OrderInfo;
+use dzer\express\Express;
 use frontend\models\Cart;
 use Yii;
+use yii\web\Response;
 class UserController extends \yii\web\Controller
 {
     public $userId;
@@ -26,5 +33,10 @@ class UserController extends \yii\web\Controller
     {
         $orderlist = OrderInfo::getMyOrder($this->userId);
         return $this->render('my-order',['orderList'=>$orderlist]);
+    }
+    public function actionExpress()
+    {
+        $express = Express::search('458157653582');
+        exit($express);
     }
 }
