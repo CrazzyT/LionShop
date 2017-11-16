@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "96e861cab1051b4e4ac9e12e0eb6af76",
+    "content-hash": "47cc3ddab3fe03187afd3b9142841eb1",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -269,16 +269,16 @@
         },
         {
             "name": "dbing/yii2-alipay",
-            "version": "1.0.0",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dbing/yii2-alipay.git",
-                "reference": "1f3f507993ada0cce60812052c312071718c3473"
+                "reference": "26d9c8608ea110372c094d8dabc1f66d634e6c30"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://files.phpcomposer.com/files/dbing/yii2-alipay/1f3f507993ada0cce60812052c312071718c3473.zip",
-                "reference": "1f3f507993ada0cce60812052c312071718c3473",
+                "url": "https://files.phpcomposer.com/files/dbing/yii2-alipay/26d9c8608ea110372c094d8dabc1f66d634e6c30.zip",
+                "reference": "26d9c8608ea110372c094d8dabc1f66d634e6c30",
                 "shasum": ""
             },
             "require": {
@@ -303,7 +303,7 @@
                 }
             ],
             "description": "Yii2 framework alipay",
-            "time": "2017-10-30T06:50:49+00:00"
+            "time": "2017-11-12T12:20:55+00:00"
         },
         {
             "name": "dzer/yii2-express",
